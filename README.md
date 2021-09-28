@@ -12,7 +12,7 @@ However, if you plan on using the API for servers with the free or premium versi
 ## Integrating with the API:
 Integrating with the API is very simple. 
 Just add the repository and dependancy to the pom.xml when using maven or the build.gradle when using gradle. 
-And don't forget to make EconomyShopGUI load before your plugin inside the plugin.yml just like so softdepend: `[EconomyShopGUI, EconomyShopGUI-Premium]`!
+And don't forget to make EconomyShopGUI load before your plugin inside the plugin.yml just like so `softdepend: [EconomyShopGUI, EconomyShopGUI-Premium]`!
 
 **Using the pom.xml in maven:**
 ```XML
