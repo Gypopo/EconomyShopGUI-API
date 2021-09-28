@@ -26,7 +26,7 @@ And don't forget to make EconomyShopGUI load before your plugin inside the plugi
     <dependency>
         <groupId>com.github.Gypopo</groupId>
         <artifactId>EconomyShopGUI-API</artifactId>
-        <version>Tag</version>
+        <version>VERSION</version>
     </dependency>
 </dependencies>
 ```
