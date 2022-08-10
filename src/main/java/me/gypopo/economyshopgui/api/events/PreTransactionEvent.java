@@ -1,5 +1,6 @@
 package me.gypopo.economyshopgui.api.events;
 
+import me.gypopo.economyshopgui.util.Transaction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -13,13 +14,13 @@ public class PreTransactionEvent extends Event implements Cancellable {
     private double price;
     private final ItemStack itemStack;
     private final Player player;
-    private final String transactionMode;
+    private final Transaction.Type transactionType;
 
-    public PreTransactionEvent(ItemStack itemStack, Player player, double price, String transactionMode) {
+    public PreTransactionEvent(ItemStack itemStack, Player player, double price, Transaction.Type transactionType) {
         this.itemStack = itemStack;
         this.player = player;
         this.price = price;
-        this.transactionMode = transactionMode;
+        this.transactionType = transactionType;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class PreTransactionEvent extends Event implements Cancellable {
      * @return The ItemStack that is used for this transaction
      */
     public ItemStack getItemStack() {
-        return itemStack;
+        return this.itemStack;
     }
 
     /**
@@ -75,14 +76,14 @@ public class PreTransactionEvent extends Event implements Cancellable {
     }
 
     /**
-     * Returns the transaction mode
+     * Returns the transaction type
      * <p>
-     * Valid transaction modes:
-     * {@code BUY}, {@code SELL}, {@code BUY_STACKS}, {@code SELL_ALL}
+     * Valid transaction types:
+     * {@code BUY_SCREEN}, {@code SELL_SCREEN}, {@code BUY_STACKS_SCREEN}, {@code SELL_ALL_SCREEN}
      *
-     * @return Whether the player purchases or sells an item
+     * @return The transaction type
      */
-    public String getTransactionMode() {
-        return this.transactionMode;
+    public Transaction.Type getTransactionType() {
+        return this.transactionType;
     }
 }
