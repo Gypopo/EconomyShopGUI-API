@@ -40,6 +40,8 @@ public class Transaction {
         public String getName() {
             return this.name;
         }
+
+        public String getMode() {return Transaction.Mode.getFromType(this).getName(); }
     }
 
     public enum Result {

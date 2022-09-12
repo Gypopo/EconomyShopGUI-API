@@ -1,5 +1,6 @@
 package me.gypopo.economyshopgui.api.events;
 
+import me.gypopo.economyshopgui.objects.ShopItem;
 import me.gypopo.economyshopgui.util.Transaction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -9,14 +10,16 @@ import org.bukkit.inventory.ItemStack;
 public class PostTransactionEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
+    private final int amount;
     private final double price;
-    private final ItemStack itemStack;
+    private final ShopItem shopItem;
     private final Player player;
     private final Transaction.Type type;
     private final Transaction.Result result;
 
-    public PostTransactionEvent(ItemStack itemStack, Player player, double price, Transaction.Type type, Transaction.Result result) {
-        this.itemStack = itemStack;
+    public PostTransactionEvent(ShopItem shopItem, Player player, int amount, double price, Transaction.Type type, Transaction.Result result) {
+        this.amount = amount;
+        this.shopItem = shopItem;
         this.player = player;
         this.price = price;
         this.type = type;
@@ -34,6 +37,14 @@ public class PostTransactionEvent extends Event {
 
     /**
      *
+     * @return The amount of items in this transaction
+     */
+    public int getAmount() {
+        return this.amount;
+    }
+
+    /**
+     *
      * @return The final price the player has payd/gotten for the item(s) with this transaction
      */
     public double getPrice() {
@@ -42,10 +53,19 @@ public class PostTransactionEvent extends Event {
 
     /**
      *
+     * @see #getShopItem()
      * @return The itemStack that should be given to the player
      */
     public ItemStack getItemStack() {
-        return itemStack;
+        return this.shopItem.getItemToGive();
+    }
+
+    /**
+     *
+     * @return The {@link ShopItem} that is used for this transaction
+     */
+    public ShopItem getShopItem() {
+        return this.shopItem;
     }
 
     /**

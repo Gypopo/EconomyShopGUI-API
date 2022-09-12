@@ -1,5 +1,6 @@
 package me.gypopo.economyshopgui.api.events;
 
+import me.gypopo.economyshopgui.objects.ShopItem;
 import me.gypopo.economyshopgui.util.Transaction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -10,14 +11,16 @@ import org.bukkit.inventory.ItemStack;
 public class PreTransactionEvent extends Event implements Cancellable {
 
     private static final HandlerList handlerList = new HandlerList();
+    private final int amount;
     private boolean cancelled;
     private double price;
-    private final ItemStack itemStack;
+    private final ShopItem shopItem;
     private final Player player;
     private final Transaction.Type transactionType;
 
-    public PreTransactionEvent(ItemStack itemStack, Player player, double price, Transaction.Type transactionType) {
-        this.itemStack = itemStack;
+    public PreTransactionEvent(ShopItem shopItem, Player player, int amount, double price, Transaction.Type transactionType) {
+        this.amount = amount;
+        this.shopItem = shopItem;
         this.player = player;
         this.price = price;
         this.transactionType = transactionType;
@@ -44,6 +47,14 @@ public class PreTransactionEvent extends Event implements Cancellable {
 
     /**
      *
+     * @return The amount of items in this transaction
+     */
+    public int getAmount() {
+        return this.amount;
+    }
+
+    /**
+     *
      * @return The price the player will pay/get for the item(s) after the transaction is made
      */
     public double getPrice() {
@@ -61,10 +72,20 @@ public class PreTransactionEvent extends Event implements Cancellable {
 
     /**
      *
+     * @see #getShopItem()
      * @return The ItemStack that is used for this transaction
      */
+    @Deprecated
     public ItemStack getItemStack() {
-        return this.itemStack;
+        return this.shopItem.getItemToGive();
+    }
+
+    /**
+     *
+     * @return The {@link ShopItem} that is used for this transaction
+     */
+    public ShopItem getShopItem() {
+        return this.shopItem;
     }
 
     /**
