@@ -58,6 +58,8 @@ public class Transaction {
         TRANSACTION_CANCELLED,
         NO_ITEMS_FOUND,
         NO_ITEM_STOCK_LEFT,
+        HIGHER_LEVEL_REQUIRED,
+        REACHED_SELL_LIMIT,
         ;
     }
 }

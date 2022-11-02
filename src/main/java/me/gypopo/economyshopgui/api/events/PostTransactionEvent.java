@@ -7,6 +7,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
+import java.util.Map;
+
 public class PostTransactionEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
@@ -14,6 +17,7 @@ public class PostTransactionEvent extends Event {
     private final double price;
     private final ShopItem shopItem;
     private final Player player;
+    private final Map<ShopItem, Integer> items;
     private final Transaction.Type type;
     private final Transaction.Result result;
 
@@ -24,6 +28,17 @@ public class PostTransactionEvent extends Event {
         this.price = price;
         this.type = type;
         this.result = result;
+        this.items = null;
+    }
+
+    public PostTransactionEvent(Map<ShopItem, Integer> items, Player player, double price, Transaction.Type type, Transaction.Result result) {
+        this.amount = 0;
+        this.shopItem = null;
+        this.player = player;
+        this.price = price;
+        this.type = type;
+        this.result = result;
+        this.items = items;
     }
 
     public static HandlerList getHandlerList() {
@@ -52,21 +67,42 @@ public class PostTransactionEvent extends Event {
     }
 
     /**
+     * You should first check if {@link #getShopItem()} returns null
      *
      * @see #getShopItem()
      * @return The itemStack that should be given to the player
      */
+    @Nullable
+    @Deprecated
     public ItemStack getItemStack() {
         return this.shopItem.getItemToGive();
     }
 
     /**
+     * When the transaction mode is either
+     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return null.
+     * <p>
+     * See {@link #getItems()} to get all items sold when the {@link #getTransactionType()} is either
+     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}.
      *
      * @return The {@link ShopItem} that is used for this transaction
      */
+    @Nullable
     public ShopItem getShopItem() {
         return this.shopItem;
     }
+
+    /**
+     * When the transaction mode is either
+     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return the items sold.
+     * Else this will return null.
+     * <p>
+     * The key is the {@link ShopItem} where the value is the amount of items sold
+     *
+     * @return All items which are sold during this transaction
+     */
+    @Nullable
+    public Map<ShopItem, Integer> getItems() { return this.items; }
 
     /**
      *

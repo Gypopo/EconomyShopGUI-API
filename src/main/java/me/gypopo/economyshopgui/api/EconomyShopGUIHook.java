@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class EconomyShopGUIHook {
 
@@ -125,6 +126,112 @@ public class EconomyShopGUIHook {
     @Nullable
     public static ShopItem getShopItem(ItemStack item) {
         return null;
+    }
+
+    /**
+     * Returns the amount of items left in stock.
+     * <p>
+     * If the item is restocking(can be bought later), this will return <b>-2</b>, if the item cannot be bought ever again, this will return <b>-3</b> or <b>-4</b>.
+     * <p>
+     * Use {@link ShopItem#getLimitedStockMode()} to determine whether this {@link ShopItem} is using player or global stock
+     *
+     *
+     * @param shopItem The shopItem to get the limited stock for
+     * @param uuid The player's uuid to get the item stock for, can be null when this item is GlobalStock
+     * @return The amount of items in stock left
+     */
+    public static int getItemStock(ShopItem shopItem, @Nullable UUID uuid) {
+        return 0;
+    }
+
+    /**
+     * Returns the time left in millis to restock the item stock in GlobalStock or PlayerStock
+     * <p>
+     * Use {@link ShopItem#getLimitedStockMode()} to determine whether this {@link ShopItem} is using player or global stock
+     *
+     *
+     * @param shopItem The shopItem to get the restocking time for
+     * @param uuid The player's uuid to get the item's restocking time for, can be null when this item is GlobalStock
+     * @return The time left to restock, or null when this item is not restocking
+     */
+    public static Long getItemStockRestockTime(ShopItem shopItem, @Nullable UUID uuid) {
+        return null;
+    }
+
+    /**
+     * Try's to purchase the amount of items from limited stock.
+     * <p>
+     * Returns the total amount of items which could be purchased.
+     * <p>
+     * Developers should use {@link #getItemStock(ShopItem, UUID)} to check and see if there is enough stock available before purchasing.
+     * <p>
+     * Use {@link ShopItem#getLimitedStockMode()} to determine whether this {@link ShopItem} is using player or global stock
+     *
+     *
+     * @param shopItem The shopItem to purchase the limited stock from
+     * @param uuid The player's uuid to purchase the item stock from, can be null when this item is GlobalStock
+     * @return Returns the total amount of items which could be purchased
+     */
+    public static int buyItemStock(ShopItem shopItem, @Nullable UUID uuid, int amount) {
+        return 0;
+    }
+
+    /**
+     * Sells the amount of items to the limited stock.
+     * <p>
+     * Use {@link ShopItem#getLimitedStockMode()} to determine whether this {@link ShopItem} is using player or global stock
+     *
+     *
+     * @param shopItem The shopItem to sell the limited stock for
+     * @param uuid The player's uuid to sell the item stock for, can be null when this item is GlobalStock
+     */
+    public static void sellItemStock(ShopItem shopItem, @Nullable UUID uuid, int amount) {}
+
+    /**
+     * Returns the limit of items left that can be sold to shop.
+     * <p>
+     * If the item is restocking(can be sold later), this will return <b>-2</b>, if the item cannot be sold ever again, this will return <b>-3</b> or <b>-4</b>.
+     * <p>
+     * Use {@link ShopItem#getLimitedSellMode()} to determine whether this {@link ShopItem} is using player or global sell limit
+     *
+     * @param shopItem The shopItem to get the sell limit for
+     * @param uuid The player's uuid to get the sell limit for, can be null when this item is GlobalLimit
+     * @return The amount left that can be sold to shop
+     */
+    public static int getSellLimit(ShopItem shopItem, @Nullable UUID uuid) {
+        return 0;
+    }
+
+    /**
+     * Returns the time left in millis to restock the sell limit in GlobalLimit or PlayerLimit
+     * <p>
+     * Use {@link ShopItem#getLimitedSellMode()} to determine whether this {@link ShopItem} is using player or global sell limit
+     *
+     *
+     * @param shopItem The shopItem to get the restocking time for
+     * @param uuid The player's uuid to get the item's restocking time for, can be null when this item is GlobalLimit
+     * @return The time left to restock, or null when this item is not restocking
+     */
+    public static Long getSellLimitRestockTime(ShopItem shopItem, @Nullable UUID uuid) {
+        return null;
+    }
+
+    /**
+     * Reduces the sell limit by the given amount
+     * <p>
+     * Returns the total amount of items which could be sold
+     * <p>
+     * Developers should use {@link #getSellLimit(ShopItem, UUID)} to check and see if there is enough stock available before purchasing.
+     * <p>
+     * Use {@link ShopItem#getLimitedSellMode()} to determine whether this {@link ShopItem} is using player or global sell limit
+     *
+     *
+     * @param shopItem The shopItem to reduce the sell limit for
+     * @param uuid The player's uuid to reduce the sell limit for, can be null when this item is GlobalStock
+     * @return Returns the total amount of items which could be purchased
+     */
+    public static int sellItemLimit(ShopItem shopItem, @Nullable UUID uuid, int amount) {
+        return 0;
     }
 
 }
