@@ -1,6 +1,9 @@
 package me.gypopo.economyshopgui.objects;
 
+import me.gypopo.economyshopgui.api.EconomyShopGUIHook;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 public class ShopItem {
 
@@ -9,6 +12,17 @@ public class ShopItem {
      */
     public ItemStack getItemToGive() {
         return null;
+    }
+
+    /**
+     * Checks if this item should refill limited stock when its sold
+     * <p>
+     * Use {@link EconomyShopGUIHook#sellItemStock(ShopItem, UUID, int)} to refill an items stock
+     *
+     * @return Whether this item should refill its stock upon selling
+     */
+    public boolean isRefillStock() {
+        return false;
     }
 
     /**
