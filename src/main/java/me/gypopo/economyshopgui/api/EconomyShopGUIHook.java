@@ -15,12 +15,14 @@ public class EconomyShopGUIHook {
      * Gets a item sell price
      * If the item couldn't be found inside the shop, this will return null
      * <p>
-     * Note: This method does NOT check for player permissions
+     * Note: This method does NOT check for player permissions NOR any price multipliers
      *
      * @param item The item to get the sell price for
      * @return The sell price of the item, if not found this will return null
+     * @see #getItemSellPrice(ShopItem, ItemStack)
      */
     @Nullable
+    @Deprecated
     public static Double getItemSellPrice(ItemStack item) {
         return null;
     }
@@ -35,8 +37,10 @@ public class EconomyShopGUIHook {
      * @param player Player to check for permissions
      * @param item The item to get the sell price for
      * @return The sell price of the item, if not found this will return null
+     * @see #getItemSellPrice(ShopItem, ItemStack, Player)
      */
     @Nullable
+    @Deprecated
     public static Double getItemSellPrice(Player player, ItemStack item) {
         return null;
     }
@@ -50,8 +54,10 @@ public class EconomyShopGUIHook {
      * @see #getItemBuyPrice(Player, ItemStack)
      * @param item The item to get the buy price for
      * @return The buy price of the item, if not found this will return null
+     * @see #getItemBuyPrice(ShopItem, ItemStack)
      */
     @Nullable
+    @Deprecated
     public static Double getItemBuyPrice(ItemStack item) {
         return null;
     }
@@ -69,9 +75,63 @@ public class EconomyShopGUIHook {
      * @param player Player to check for discounts and permissions
      * @param item The item to get the buy price for
      * @return The buy price of the item, if not found this will return null
+     * @see #getItemBuyPrice(ShopItem, ItemStack, Player)
      */
     @Nullable
+    @Deprecated
     public static Double getItemBuyPrice(Player player, ItemStack item) {
+        return null;
+    }
+
+    /**
+     * Gets an item sell price
+     *
+     * @param shopItem The shopItem to get the price from
+     * @param item The item to get the sell price for
+     * @return The sell price of the item, if not found this will return null
+     * @see #getItemSellPrice(ShopItem, ItemStack, Player)
+     */
+    public static Double getItemSellPrice(ShopItem shopItem, ItemStack item) {
+        return null;
+    }
+
+    /**
+     * Gets an item sell price.
+     * <p>
+     * <b>In addition to {@link #getItemBuyPrice(ShopItem, ItemStack)}, this method will apply any multipliers for the player if present</b>
+     *
+     * @param shopItem The shopItem to get the price from
+     * @param player Player to check for permissions
+     * @param item The item to get the sell price for
+     * @return The sell price of the item
+     */
+    public static Double getItemSellPrice(ShopItem shopItem, ItemStack item, Player player) {
+        return null;
+    }
+
+    /**
+     * Gets an item buy price
+     *
+     * @param shopItem The shopItem to get the price from
+     * @param item The item to get the amount from
+     * @return The buy price of the item
+     * @see #getItemBuyPrice(ShopItem, ItemStack, Player)
+     */
+    public static Double getItemBuyPrice(ShopItem shopItem, ItemStack item) {
+        return null;
+    }
+
+    /**
+     * Gets the buy price of the item given as argument
+     * <p>
+     * <b>In addition to {@link #getItemBuyPrice(ShopItem, ItemStack)}, this method will apply any discounts for the player if present</b>
+     *
+     * @param shopItem The shop item to get the price from
+     * @param player Player to check for discounts and permissions
+     * @param item The item to get the amount from
+     * @return The buy price of the item
+     */
+    public static Double getItemBuyPrice(ShopItem shopItem, ItemStack item, Player player) {
         return null;
     }
 

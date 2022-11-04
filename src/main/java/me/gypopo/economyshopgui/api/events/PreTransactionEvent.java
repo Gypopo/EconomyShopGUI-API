@@ -85,27 +85,20 @@ public class PreTransactionEvent extends Event implements Cancellable {
     }
 
     /**
-     *
      * @see #getShopItem()
      * @return The ItemStack that is used for this transaction
      */
-    @Nullable
     @Deprecated
     public ItemStack getItemStack() {
         return this.shopItem.getItemToGive();
     }
 
     /**
-     * <p>
-     * When the transaction mode is either
-     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return null.
-     * <p>
      * See {@link #getItems()} to get all items sold when the {@link #getTransactionType()} is either
      * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}.
      *
      * @return The {@link ShopItem} that is used for this transaction
      */
-    @Nullable
     public ShopItem getShopItem() {
         return this.shopItem;
     }

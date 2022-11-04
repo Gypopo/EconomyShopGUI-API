@@ -67,27 +67,20 @@ public class PostTransactionEvent extends Event {
     }
 
     /**
-     * You should first check if {@link #getShopItem()} returns null
-     *
      * @see #getShopItem()
      * @return The itemStack that should be given to the player
      */
-    @Nullable
     @Deprecated
     public ItemStack getItemStack() {
         return this.shopItem.getItemToGive();
     }
 
     /**
-     * When the transaction mode is either
-     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return null.
-     * <p>
      * See {@link #getItems()} to get all items sold when the {@link #getTransactionType()} is either
      * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}.
      *
      * @return The {@link ShopItem} that is used for this transaction
      */
-    @Nullable
     public ShopItem getShopItem() {
         return this.shopItem;
     }
