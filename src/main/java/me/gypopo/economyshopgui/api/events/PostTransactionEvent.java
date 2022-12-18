@@ -1,6 +1,7 @@
 package me.gypopo.economyshopgui.api.events;
 
 import me.gypopo.economyshopgui.objects.ShopItem;
+import me.gypopo.economyshopgui.util.EcoType;
 import me.gypopo.economyshopgui.util.Transaction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -15,6 +16,7 @@ public class PostTransactionEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();
     private final int amount;
     private final double price;
+    private Map<EcoType, Double> prices;
     private final ShopItem shopItem;
     private final Player player;
     private final Map<ShopItem, Integer> items;
@@ -41,6 +43,17 @@ public class PostTransactionEvent extends Event {
         this.items = items;
     }
 
+    public PostTransactionEvent(Map<ShopItem, Integer> items, Map<EcoType, Double> prices, Player player, int amount, Transaction.Type type, Transaction.Result result) {
+        this.amount = amount;
+        this.shopItem = items.size() >= 1 ? (ShopItem) items.keySet().toArray()[0] : null;
+        this.player = player;
+        this.price = this.shopItem != null ? prices.get(this.shopItem.getEcoType()) : 0;
+        this.type = type;
+        this.result = result;
+        this.items = items;
+        this.prices = prices;
+    }
+
     public static HandlerList getHandlerList() {
         return handlerList;
     }
@@ -64,6 +77,22 @@ public class PostTransactionEvent extends Event {
      */
     public double getPrice() {
         return this.price;
+    }
+
+    /**
+     * When the transaction mode is either
+     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return the prices of the items sold.
+     * Else this will return null.
+     * <p>
+     * The key is the {@link EcoType} where the value is the total cost price per economy type.
+     * <p>
+     * See {@link ShopItem#getEcoType()} to see which items use what {@link EcoType}.
+     *
+     * @return All currency types together the costs which are used in this transaction
+     */
+    @Nullable
+    public Map<EcoType, Double> getPrices() {
+        return this.prices;
     }
 
     /**

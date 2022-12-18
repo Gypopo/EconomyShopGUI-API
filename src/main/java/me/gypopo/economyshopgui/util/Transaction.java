@@ -51,6 +51,7 @@ public class Transaction {
         NOT_ALL_ITEMS_ADDED,
 
         // Failed
+        CANT_STORE_PAYMENT,
         NOT_ENOUGH_SPACE,
         INSUFFICIENT_FUNDS,
         NO_INVENTORY_SPACE,
