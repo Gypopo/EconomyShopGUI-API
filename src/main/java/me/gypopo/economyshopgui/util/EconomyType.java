@@ -6,9 +6,7 @@ public enum EconomyType {
     VAULT("Vault"),
     PLAYER_POINTS("PlayerPoints"),
     GEMS_ECONOMY("GemsEconomy"),
-    GEMS_ECONOMY_CURRENCY("GemsEconomy"),
     ULTRA_ECONOMY("UltraEconomy"),
-    ULTRA_ECONOMY_CURRENCY("UltraEconomy"),
     ;
 
     private final String name;
@@ -19,5 +17,9 @@ public enum EconomyType {
 
     public String getName() {
         return this.name;
+    }
+
+    public static EcoType getFromString(String type) {
+        return null;
     }
 }
