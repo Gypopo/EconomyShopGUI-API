@@ -58,4 +58,40 @@ public class ShopItem {
     public EcoType getEcoType() {
         return null;
     }
+
+    /**
+     * Returns the maximum amount of items which can be bought in one transaction
+     *
+     * @return The maximum amount of items which can be bought in one transaction, '0' if not set
+     */
+    public int getMaxBuy() {
+        return 0;
+    }
+
+    /**
+     * Returns whether the given amount is larger than the maximum amount to buy
+     *
+     * @param amount The amount to check for
+     * @return Whether the given amount is larger than the maximum amount to buy
+     */
+    public boolean isMaxBuy(int amount) {
+        return false;
+    }
+    /**
+     * Returns the maximum amount of items which can be sold in one transaction
+     *
+     * @return The maximum amount of items which can be sold in one transaction, '0' if not set
+     */
+    public int getMaxSell() {
+        return 0;
+    }
+    /**
+     * Returns whether the given amount is larger than the maximum amount to buy
+     *
+     * @param amount The amount to check for
+     * @return Whether the given amount is larger than the maximum amount to buy
+     */
+    public boolean isMaxSell(int amount) {
+        return false;
+    }
 }

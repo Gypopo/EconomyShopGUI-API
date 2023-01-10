@@ -18,7 +18,7 @@ public class Transaction {
         }
 
         public static Mode getFromType(Type type) {
-            return type == Type.BUY_SCREEN || type == Type.BUY_STACKS_SCREEN ? BUY : SELL;
+            return type == Type.BUY_SCREEN || type == Type.BUY_STACKS_SCREEN || type == Type.QUICK_BUY ? BUY : SELL;
         }
     }
 
@@ -29,6 +29,8 @@ public class Transaction {
         SELL_SCREEN(""),
         BUY_SCREEN(""),
         BUY_STACKS_SCREEN(""),
+        QUICK_SELL(""),
+        QUICK_BUY(""),
         ;
 
         private String name;
