@@ -1,6 +1,9 @@
 package me.gypopo.economyshopgui.api;
 
 import me.gypopo.economyshopgui.objects.ShopItem;
+import me.gypopo.economyshopgui.providers.EconomyProvider;
+import me.gypopo.economyshopgui.util.EcoType;
+import me.gypopo.economyshopgui.util.Transaction;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -117,6 +120,7 @@ public class EconomyShopGUIHook {
      * @return The buy price of the item
      * @see #getItemBuyPrice(ShopItem, ItemStack, Player)
      */
+    @Deprecated
     public static Double getItemBuyPrice(ShopItem shopItem, ItemStack item) {
         return null;
     }
@@ -131,7 +135,49 @@ public class EconomyShopGUIHook {
      * @param item The item to get the amount from
      * @return The buy price of the item
      */
+    @Deprecated
     public static Double getItemBuyPrice(ShopItem shopItem, ItemStack item, Player player) {
+        return null;
+    }
+
+    /**
+     * Gets an item buy price
+     *
+     * @param shopItem The shopItem to get the price from
+     * @param amount Amount of the item
+     * @return The buy price of the item
+     * @see #getItemBuyPrice(ShopItem, Player, int)
+     */
+    public static double getItemBuyPrice(ShopItem shopItem, int amount) {
+        return 0d;
+    }
+
+    /**
+     * Gets the buy price of the item given as argument
+     * <p>
+     * <b>In addition to {@link #getItemBuyPrice(ShopItem, int)}, this method will apply any discounts for the player if present</b>
+     *
+     * @param shopItem The shop item to get the price from
+     * @param player Player to check for discounts and permissions
+     * @param amount Amount of the item
+     * @return The buy price of the item
+     */
+    public static double getItemBuyPrice(ShopItem shopItem, Player player, int amount) {
+        return 0d;
+    }
+
+
+    /**
+     * Gets the registered EconomyProvider for the given type
+     * <p>
+     * Can be used to withdraw/deposit balances into a players account
+     * using an economy provider registered within EconomyShopGUI
+     *
+     * @param ecoType The type of the Economy | Can be null which will return the default provider
+     * @see ShopItem#getEcoType()
+     * @return The registered EconomyProvider or null if not found
+     */
+    public static EconomyProvider getEcon(@Nullable EcoType ecoType) {
         return null;
     }
 

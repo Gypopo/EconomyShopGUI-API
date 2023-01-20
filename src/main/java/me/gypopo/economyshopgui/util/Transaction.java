@@ -31,6 +31,7 @@ public class Transaction {
         BUY_STACKS_SCREEN(""),
         QUICK_SELL(""),
         QUICK_BUY(""),
+        AUTO_SELL_CHEST("")
         ;
 
         private String name;

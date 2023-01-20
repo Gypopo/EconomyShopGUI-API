@@ -77,6 +77,7 @@ public class ShopItem {
     public boolean isMaxBuy(int amount) {
         return false;
     }
+
     /**
      * Returns the maximum amount of items which can be sold in one transaction
      *
@@ -85,6 +86,7 @@ public class ShopItem {
     public int getMaxSell() {
         return 0;
     }
+
     /**
      * Returns whether the given amount is larger than the maximum amount to buy
      *
@@ -93,5 +95,14 @@ public class ShopItem {
      */
     public boolean isMaxSell(int amount) {
         return false;
+    }
+
+    /**
+     * Returns the stack size of the item
+     *
+     * @return The stack size of the item
+     */
+    public int getStackSize() {
+        return 1;
     }
 }
