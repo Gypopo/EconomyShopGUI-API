@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PreTransactionEvent extends Event implements Cancellable {
@@ -18,7 +19,7 @@ public class PreTransactionEvent extends Event implements Cancellable {
     private final int amount;
     private boolean cancelled;
     private double price;
-    private Map<EcoType, Double> prices;
+    private final Map<EcoType, Double> prices;
     private final ShopItem shopItem;
     private final Player player;
     private final Map<ShopItem, Integer> items;
@@ -30,16 +31,8 @@ public class PreTransactionEvent extends Event implements Cancellable {
         this.player = player;
         this.price = price;
         this.transactionType = transactionType;
-        this.items = null;
-    }
-
-    public PreTransactionEvent(Map<ShopItem, Integer> items, Player player, double price, Transaction.Type transactionType) {
-        this.amount = 0;
-        this.shopItem = null;
-        this.player = player;
-        this.price = price;
-        this.items = items;
-        this.transactionType = transactionType;
+        this.items = new HashMap<>();
+        this.prices = new HashMap<>();
     }
 
     public PreTransactionEvent(Map<ShopItem, Integer> items, Map<EcoType, Double> prices, Player player, int amount, Transaction.Type transactionType) {
@@ -90,7 +83,7 @@ public class PreTransactionEvent extends Event implements Cancellable {
     /**
      * When the transaction mode is either
      * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return the prices of the items sold.
-     * Else this will return null.
+     * Else this will return an empty map.
      * <p>
      * The key is the {@link EcoType} where the value is the total cost price per economy type.
      * <p>
@@ -98,7 +91,6 @@ public class PreTransactionEvent extends Event implements Cancellable {
      *
      * @return All currency types together the costs which are used in this transaction
      */
-    @Nullable
     public Map<EcoType, Double> getPrices() {
         return this.prices;
     }
@@ -134,13 +126,12 @@ public class PreTransactionEvent extends Event implements Cancellable {
     /**
      * When the transaction mode is either
      * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return the items sold.
-     * Else this will return null.
+     * Else this will return an empty map.
      * <p>
      * The key is the {@link ShopItem} where the value is the amount of items sold
      *
      * @return All items which are sold during this transaction
      */
-    @Nullable
     public Map<ShopItem, Integer> getItems() { return this.items; }
 
     /**

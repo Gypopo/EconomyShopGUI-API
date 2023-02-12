@@ -235,6 +235,34 @@ public class EconomyShopGUIHook {
     }
 
     /**
+     * Returns the {@link ShopItem} matching the given {@link ItemStack}
+     * <p>
+     * If the item doesn't match any ShopItem <b>or the player doesn't have the 'EconomyShopGUI.shop.[section]' permissions</b> for the found shop item, this will return null
+     * <p>
+     *
+     * @param item The item to match
+     * @param player The player to check for permissions
+     * @return The ShopItem matching the ItemStack
+     */
+    @Nullable
+    public static ShopItem getShopItem(Player player, ItemStack item) {
+        return null;
+    }
+
+    /**
+     * Returns the {@link ShopItem} located at the given config path received from {@link ShopItem#getItemPath()}
+     * <p>
+     * If no item is found at this item path, this will return null
+     *
+     * @param itemPath The itemPath inside the shops.yml
+     * @return The ShopItem located at this config path
+     */
+    @Nullable
+    public static ShopItem getShopItem(String itemPath) {
+        return null;
+    }
+
+    /**
      * Returns the amount of items left in stock.
      * <p>
      * If the item is restocking(can be bought later), this will return <b>-2</b>, if the item cannot be bought ever again, this will return <b>-3</b> or <b>-4</b>.

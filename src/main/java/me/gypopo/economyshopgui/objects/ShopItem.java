@@ -8,11 +8,74 @@ import java.util.UUID;
 
 public class ShopItem {
 
+    public final String section = "";
+    public final String itemLoc = "";
+
+    /**
+     * @return The path this item is located inside the shops.yml
+     */
+    public String getItemPath() {
+        return null;
+    }
+
+    /**
+     * @return The item displayed in shop
+     */
+    public ItemStack getShopItem() {
+        return null;
+    }
+
     /**
      * @return The item which is given to players upon buying
      */
     public ItemStack getItemToGive() {
         return null;
+    }
+
+    /**
+     * Returns whether this item is a display item
+     * <p>
+     * DisplayItems cannot be bought/sold to/from shop.
+     * <p>
+     * Using {@link EconomyShopGUIHook#getShopItem(ItemStack)} won't return any display items
+     *
+     * @return Whether this item is a display item. DisplayItems cannot be bought/sold to shop
+     */
+    public boolean isDisplayItem() { return false; }
+
+    /**
+     * @return Whether this shop item is linked to a subsection
+     */
+    public boolean isLinked() {
+        return false;
+    }
+
+    /**
+     * Returns the linked subsection if {@link #isLinked()} is true, else this will return null
+     *
+     * @return Returns the linked subsection
+     */
+    public String getSubSection() {
+        return null;
+    }
+
+    /**
+     * @return Returns whether this shop item is hidden from shop
+     */
+    public boolean isHidden() {
+        return false;
+    }
+
+    /**
+     * @return Whether this shop item failed to load
+     */
+    public boolean hasItemError() { return false; }
+
+    /**
+     * @return Returns the level required in order to buy/sell this item
+     */
+    public int getLevelRequired() {
+        return 0;
     }
 
     /**
@@ -104,5 +167,14 @@ public class ShopItem {
      */
     public int getStackSize() {
         return 1;
+    }
+
+    /**
+     * Returns whether the item uses DynamicPricing
+     *
+     * @return Whether DyanmicPricing is enabled for this item
+     */
+    public boolean isDynamicPricing() {
+        return false;
     }
 }
