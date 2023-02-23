@@ -2,6 +2,7 @@ package me.gypopo.economyshopgui.util;
 
 public enum EconomyType {
 
+    LEVELS("Levels"),
     ITEM("Item"),
     VAULT("Vault"),
     PLAYER_POINTS("PlayerPoints"),

@@ -237,11 +237,19 @@ public class EconomyShopGUIHook {
     /**
      * Returns the {@link ShopItem} matching the given {@link ItemStack}
      * <p>
-     * If the item doesn't match any ShopItem <b>or the player doesn't have the 'EconomyShopGUI.shop.[section]' permissions</b> for the found shop item, this will return null
+     * This method will return null if the following conditions aren't met:
+     * <p>
+     * - The Player doesn't have the permissions to buy/sell items from/to the section of the shop item
+     * <p>
+     * - The Player doesn't have the permissions to buy/sell the specific shop item
+     * <p>
+     * - The Player doesn't have enough levels to purchase/sell this item
+     * <p>
+     * - The ShopItem is a displayItem and cannot be sold/bought
      * <p>
      *
      * @param item The item to match
-     * @param player The player to check for permissions
+     * @param player The player to check if they are allowed to purchase/sell the item
      * @return The ShopItem matching the ItemStack
      */
     @Nullable
@@ -366,6 +374,33 @@ public class EconomyShopGUIHook {
      */
     public static int sellItemLimit(ShopItem shopItem, @Nullable UUID uuid, int amount) {
         return 0;
+    }
+
+    /**
+     * Checks whether the player has permissions to access the specific given shop item
+     * <p>
+     * This will return true if the player has the permission: 'EconomyShopGUI.shop.<section>.item.<permission>'
+     *
+     * @param shopItem ShopItem to check for permissions
+     * @param player The player to check for permissions
+     * @return Whether the player has permissions to purchase/sell this specific item
+     */
+    public static boolean hasPermissions(ShopItem shopItem, Player player) {
+        return true;
+    }
+
+    /**
+     * Checks whether the player has permissions to access the specific given shop item
+     * <p>
+     * This will return true if the player has the permission: 'EconomyShopGUI.<root>.<section>.item.<permission>'
+     *
+     * @param shopItem ShopItem to check for permissions
+     * @param player The player to check for permissions
+     * @param root The root permission to check, possible values are 'shop', 'sellall', 'sellallitem', 'sellallhand', 'sellgui'
+     * @return Whether the player has permissions to purchase/sell this specific item
+     */
+    public static boolean hasPermissions(ShopItem shopItem, Player player, String root) {
+        return true;
     }
 
 }
