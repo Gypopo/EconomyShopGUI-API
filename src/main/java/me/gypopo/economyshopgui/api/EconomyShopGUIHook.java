@@ -126,6 +126,23 @@ public class EconomyShopGUIHook {
     }
 
     /**
+     * Gets an item sell price.
+     * <p>
+     * <b>In addition to {@link #getItemSellPrice(ShopItem, ItemStack, Player)}, this method will exactly calculate the DynamicPrice</b>
+     * <p><p>
+     * This method is only useful when {@link ShopItem#isDynamicPricing()} returns true
+     * @param shopItem The shopItem to get the price from
+     * @param player Player to check for permissions
+     * @param item The item to get the sell price for
+     * @param amount The amount of the item
+     * @param sold The amount that is already sold this batch, this method should be used instead of {@link #getItemSellPrice(ShopItem, ItemStack, Player)} or {@link #getItemSellPrice(ShopItem, ItemStack)} because this will exactly calcule the dynamic sell price of the item
+     * @return The sell price of the item
+     */
+    public static Double getItemSellPrice(ShopItem shopItem, ItemStack item, Player player, int amount, int sold) {
+        return null;
+    }
+
+    /**
      * This will return whether the item can be bought
      * <p>
      * Checks if the item has a buy price at all and if it isn't negative
