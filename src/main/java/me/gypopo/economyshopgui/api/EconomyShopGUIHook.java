@@ -1,5 +1,7 @@
 package me.gypopo.economyshopgui.api;
 
+import me.gypopo.economyshopgui.api.prices.AdvancedBuyPrice;
+import me.gypopo.economyshopgui.api.prices.AdvancedSellPrice;
 import me.gypopo.economyshopgui.objects.ShopItem;
 import me.gypopo.economyshopgui.providers.EconomyProvider;
 import me.gypopo.economyshopgui.util.EcoType;
@@ -164,6 +166,54 @@ public class EconomyShopGUIHook {
      */
     public static double getItemBuyPrice(ShopItem shopItem, Player player, int amount) {
         return 0d;
+    }
+
+    /**
+     * The premium version of EconomyShopGUI allows items to have multiple buy prices with different currencies.
+     * This allows the item to be bought using either one type of currency or using all types at the same time.
+     * <p>
+     * This method returns true if the item allows to be bought using multiple buy prices, else will return false
+     *
+     * @param shopItem The shop item to check for multiple buy prices
+     * @return Whether the item has multiple buy prices
+     */
+    public static boolean hasMultipleBuyPrices(ShopItem shopItem) {
+        return false;
+    }
+
+    /**
+     * If {@link #hasMultipleBuyPrices(ShopItem)} this will return the multiple buy prices utility class.
+     * Else, this will return null.
+     *
+     * @param shopItem The shop item to check for multiple buy prices
+     * @return The utility class for multiple buy prices
+     */
+    public static AdvancedBuyPrice getMultipleBuyPrices(ShopItem shopItem) {
+        return new AdvancedBuyPrice(shopItem);
+    }
+
+    /**
+     * The premium version of EconomyShopGUI allows items to have multiple sell prices with different currencies.
+     * This allows the item to be sold using either one type of currency or using all types at the same time.
+     * <p>
+     * This method returns true if the item allows to be sold using multiple sell prices, else will return false
+     *
+     * @param shopItem The shop item to check for multiple buy prices
+     * @return Whether the item has multiple buy prices
+     */
+    public static boolean hasMultipleSellPrices(ShopItem shopItem) {
+        return false;
+    }
+
+    /**
+     * If {@link #hasMultipleSellPrices(ShopItem)} this will return the multiple sell prices utility class.
+     * Else, this will return null.
+     *
+     * @param shopItem The shop item to check for multiple sell prices
+     * @return The utility class for multiple sell prices
+     */
+    public static AdvancedSellPrice getMultipleSellPrices(ShopItem shopItem) {
+        return new AdvancedSellPrice(shopItem);
     }
 
 
