@@ -17,6 +17,17 @@ public class EconomyShopGUIHook {
     public EconomyShopGUIHook() {}
 
     /**
+     * This will return whether the item can be sold
+     * <p>
+     * Checks if the item has a sell price at all and if it isn't negative
+     *
+     * @return Whether this item can be sold to the store
+     */
+    public static boolean isSellAble(ShopItem shopItem) {
+        return false;
+    }
+
+    /**
      * Gets a item sell price
      * If the item couldn't be found inside the shop, this will return null
      * <p>
@@ -112,6 +123,17 @@ public class EconomyShopGUIHook {
      */
     public static Double getItemSellPrice(ShopItem shopItem, ItemStack item, Player player) {
         return null;
+    }
+
+    /**
+     * This will return whether the item can be bought
+     * <p>
+     * Checks if the item has a buy price at all and if it isn't negative
+     *
+     * @return Whether this item can be bought from store
+     */
+    public static boolean isBuyAble(ShopItem shopItem) {
+        return false;
     }
 
     /**
