@@ -11,4 +11,8 @@ public class CustomEvent extends Event {
     public HandlerList getHandlers() {
         return handlerList;
     }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
+    }
 }
