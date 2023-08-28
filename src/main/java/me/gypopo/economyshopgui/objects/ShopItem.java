@@ -71,6 +71,10 @@ public class ShopItem {
      */
     public boolean hasItemError() { return false; }
 
+    public boolean hasSeasonModifier(String world) {
+        return false;
+    }
+
     /**
      * @return Returns the level required in order to buy/sell this item
      */

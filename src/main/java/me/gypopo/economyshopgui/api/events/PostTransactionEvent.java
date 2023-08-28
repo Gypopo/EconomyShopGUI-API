@@ -12,9 +12,8 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PostTransactionEvent extends Event {
+public class PostTransactionEvent extends CustomEvent {
 
-    private static final HandlerList handlerList = new HandlerList();
     private final int amount;
     private final double price;
     private final Map<EcoType, Double> prices;
@@ -44,15 +43,6 @@ public class PostTransactionEvent extends Event {
         this.result = result;
         this.items = items;
         this.prices = prices;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
     }
 
     /**

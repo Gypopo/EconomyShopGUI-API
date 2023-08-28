@@ -13,9 +13,8 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PreTransactionEvent extends Event implements Cancellable {
+public class PreTransactionEvent extends CustomEvent implements Cancellable {
 
-    private static final HandlerList handlerList = new HandlerList();
     private final int amount;
     private boolean cancelled;
     private double price;
@@ -53,15 +52,6 @@ public class PreTransactionEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
     }
 
     /**
