@@ -73,6 +73,25 @@ public class AdvancedSellPrice {
      * This will return the sell price of the item matching the given {@link EcoType}.
      * If the {@link EcoType} is null, all possible sell prices will be returned for the ShopItem
      * <p>
+     * <b>In addition to {@link #getSellPrices(EcoType, ItemStack)}, this method will exactly calculate the DynamicPrice</b>
+     * <p><p>
+     * This method is only useful when {@link ShopItem#isDynamicPricing()} returns true
+     * @param ecoType The currency type to get the buy price for
+     * @param item Item to get the sell price for
+     * @param amount The amount of the item
+     * @param sold The amount that is already sold this batch, this method should be used instead of {@link #getSellPrices(EcoType, ItemStack)} because this will exactly calcule the dynamic sell price of the item
+     * @return Sell price of the item for the specified EcoType, if null, this will return all possible sell prices the item has.
+     * <p>
+     * Returns an empty Map if no sell prices were found matching the given EcoType
+     */
+    public Map<EcoType, Double> getSellPrices(@Nullable EcoType ecoType, ItemStack item, int amount, int sold) {
+        return null;
+    }
+
+    /**
+     * This will return the sell price of the item matching the given {@link EcoType}.
+     * If the {@link EcoType} is null, all possible sell prices will be returned for the ShopItem
+     * <p>
      * <b>In addition to {@link #getSellPrices(EcoType, ItemStack)}, this method will apply any sell multipliers for the player if present</b>
      *
      * @param ecoType The currency type to get the buy price for

@@ -1,16 +1,20 @@
 package me.gypopo.economyshopgui.api;
 
+import me.gypopo.economyshopgui.api.objects.SellPrice;
+import me.gypopo.economyshopgui.api.objects.SellPrices;
 import me.gypopo.economyshopgui.api.prices.AdvancedBuyPrice;
 import me.gypopo.economyshopgui.api.prices.AdvancedSellPrice;
 import me.gypopo.economyshopgui.objects.ShopItem;
 import me.gypopo.economyshopgui.providers.EconomyProvider;
 import me.gypopo.economyshopgui.util.EcoType;
 import me.gypopo.economyshopgui.util.Transaction;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
+import java.util.*;
 
 public class EconomyShopGUIHook {
 
@@ -140,6 +144,215 @@ public class EconomyShopGUIHook {
      */
     public static Double getItemSellPrice(ShopItem shopItem, ItemStack item, Player player, int amount, int sold) {
         return null;
+    }
+
+    /**
+     * Gets an item sell price.
+     * <p>
+     * <b>In addition to {@link #getItemSellPrice(ShopItem, ItemStack)}, this method will exactly calculate the DynamicPrice</b>
+     * <p><p>
+     * This method is only useful when {@link ShopItem#isDynamicPricing()} returns true
+     * @param shopItem The shopItem to get the price from
+     * @param item The item to get the sell price for
+     * @param amount The amount of the item
+     * @param sold The amount that is already sold this batch, this method should be used instead of {@link #getItemSellPrice(ShopItem, ItemStack)} or {@link #getItemSellPrice(ShopItem, ItemStack)} because this will exactly calcule the dynamic sell price of the item
+     * @return The sell price of the item
+     */
+    public static Double getItemSellPrice(ShopItem shopItem, ItemStack item, int amount, int sold) {
+        return null;
+    }
+
+    /**
+     * Returns a map with sell prices for this item<br><br>
+     * This method returns only prices of ShopItems that meet the following requirements:<br>
+     * - ShopItem is found inside shop ({@link EconomyShopGUIHook#getShopItem(Player, ItemStack) != null})<br>
+     * - ShopItem does not have an item error ({@link ShopItem#hasItemError()})<br>
+     * - ShopItem is not a display item ({@link ShopItem#isDisplayItem()})
+     * - ShopItem is sellable ({@link EconomyShopGUIHook#isSellAble(ShopItem)} ()})<br>
+     * - ShopItem is maximum sell limit ({@link ShopItem#isMaxSell(int)})<br>
+     * - Player does have permissions for <b>EconomyShopGUI.shop.{section}</b><br>
+     * - Player does have permissions for this specific shop item <b>EconomyShopGUI.shop.{section}.item.{permission}</b><br>
+     * - Player does meet the requirements of this item<br>
+     * - If there is enough sell stock available ({@link EconomyShopGUIHook#getSellLimit(ShopItem, UUID)})<br>
+     *<br><br>
+     * It is important to call the {@link SellPrice#updateLimits()} method which should be called after the items have been sold,
+     * since this makes sure all item limits(sell stock, dynamic pricing) gets updated accordingly!
+     * @param item The ItemStack to be sold
+     * @param player The player to check for permissions, multipliers, sell limits
+     * @return The prices of the item, or null if none available
+     */
+    public static Optional<SellPrice> getSellPrice(OfflinePlayer player, ItemStack item) {
+        Objects.requireNonNull(item, "Item cannot be null");
+        Objects.requireNonNull(player, "Player cannot be null");
+
+        boolean online = player.isOnline();
+        int amount = item.getAmount();
+
+        ShopItem shopItem = !online ? EconomyShopGUIHook.getShopItem(item) :
+                EconomyShopGUIHook.getShopItem((Player) player, item);
+
+        if (shopItem == null || shopItem.hasItemError())
+            return Optional.empty();
+
+        if (shopItem.isMaxSell(amount))
+            return Optional.empty();
+
+        if (shopItem.getLimitedSellMode() != 0) {
+            int stock = EconomyShopGUIHook.getSellLimit(shopItem, player.getUniqueId());
+            if (amount > stock)
+                return Optional.empty();
+        }
+
+        SellPrice price;
+        if (EconomyShopGUIHook.hasMultipleSellPrices(shopItem)) {
+            Map<EcoType, Double> prices = !online ? EconomyShopGUIHook.getMultipleSellPrices(shopItem).getSellPrices(null, item, item.getAmount(), 0) :
+                    EconomyShopGUIHook.getMultipleSellPrices(shopItem).getSellPrices(null, (Player) player, item, item.getAmount(), 0);
+
+            price = new SellPrice(player, amount, shopItem, prices);
+        } else {
+            double sellPrice = !online ? EconomyShopGUIHook.getItemSellPrice(shopItem, item, item.getAmount(), 0) :
+                    EconomyShopGUIHook.getItemSellPrice(shopItem, item, (Player) player, item.getAmount(), 0);
+
+            price = new SellPrice(player, amount, shopItem, shopItem.getEcoType(), sellPrice);
+        }
+
+        return Optional.of(price);
+    }
+
+    /**
+     * Returns a map with sell prices for the given items<br><br>
+     * This method returns only prices of ShopItems that meet the following requirements:<br>
+     * - ItemStack is not null ({@code item != null})<br>
+     * - ItemStack is not AIR ({@link ItemStack#getType()} != Material.AIR)<br>
+     * - ShopItem is found inside shop ({@link EconomyShopGUIHook#getShopItem(Player, ItemStack) != null})<br>
+     * - ShopItem does not have an item error ({@link ShopItem#hasItemError()})<br>
+     * - ShopItem is not a display item ({@link ShopItem#isDisplayItem()})
+     * - ShopItem is sellable ({@link EconomyShopGUIHook#isSellAble(ShopItem)} ()})<br>
+     * - ShopItem is maximum sell limit ({@link ShopItem#isMaxSell(int)})<br>
+     * - Player does have permissions for <b>EconomyShopGUI.shop.{section}</b><br>
+     * - Player does have permissions for this specific shop item <b>EconomyShopGUI.shop.{section}.item.{permission}</b><br>
+     * - Player does meet the requirements of this item<br>
+     * - If there is enough sell stock available ({@link EconomyShopGUIHook#getSellLimit(ShopItem, UUID)})<br>
+     *<br><br>
+     * It is important to call the {@link SellPrices#updateLimits()} method which should be called after the items have been sold,
+     * since this makes sure all item limits(sell stock, dynamic pricing) gets updated accordingly!
+     * @param player The player to check for permissions, multipliers, sell limits
+     * @param items The ItemStacks to be sold
+     * @return The prices of the items, or an empty
+     */
+    public static SellPrices getSellPrices(OfflinePlayer player, ItemStack... items) {
+        Objects.requireNonNull(player, "Player cannot be null");
+        Objects.requireNonNull(items, "Items cannot be null");
+
+        boolean online = player.isOnline();
+
+        Map<EcoType, Double> prices = new HashMap<>();
+        Map<ShopItem, Integer> shopItems = new HashMap<>();
+        for (ItemStack item : items) {
+            if (item == null || item.getType() == Material.AIR)
+                continue;
+
+            ShopItem shopItem = !online ? EconomyShopGUIHook.getShopItem(item) :
+                    EconomyShopGUIHook.getShopItem((Player) player, item);
+
+            if (shopItem == null || !EconomyShopGUIHook.isSellAble(shopItem))
+                continue;
+
+            int alreadySold = shopItems.getOrDefault(shopItem, 0);
+
+            if (shopItem.isMaxSell(item.getAmount() + alreadySold))
+                continue; // Max sell reached
+
+            if (shopItem.getLimitedSellMode() != 0) {
+                int stock = EconomyShopGUIHook.getSellLimit(shopItem, player.getUniqueId());
+                if ((item.getAmount() + alreadySold) > stock)
+                    continue; // Sell limit reached
+            }
+
+            if (EconomyShopGUIHook.hasMultipleSellPrices(shopItem)) {
+                Map<EcoType, Double> sellPrices = !online ? EconomyShopGUIHook.getMultipleSellPrices(shopItem).getSellPrices(null, item, item.getAmount(), alreadySold) :
+                        EconomyShopGUIHook.getMultipleSellPrices(shopItem).getSellPrices(null, (Player) player, item, item.getAmount(), alreadySold);
+
+                for (EcoType ecoType : sellPrices.keySet()) {
+                    prices.put(ecoType, prices.getOrDefault(ecoType, 0d) + sellPrices.get(ecoType));
+                }
+            } else {
+                double sellPrice = !online ? EconomyShopGUIHook.getItemSellPrice(shopItem, item, item.getAmount(), alreadySold) :
+                        EconomyShopGUIHook.getItemSellPrice(shopItem, item, (Player) player, item.getAmount(), alreadySold);
+
+                prices.put(shopItem.getEcoType(), prices.getOrDefault(shopItem.getEcoType(), 0d) + sellPrice);
+            }
+
+            shopItems.put(shopItem, alreadySold + item.getAmount());
+        }
+
+        return new SellPrices(player, shopItems, prices);
+    }
+
+    /**
+     * This method is similar to {@link EconomyShopGUIHook#getSellPrices(OfflinePlayer, ItemStack...)} but instead may dynamically cut item stacks into smaller amounts<br>
+     * Meaning that any item stack may be cut using {@link ItemStack#setAmount(int)} when the full stack is not able to be sold, but rather a smaller amount<br>
+     * Indexes of item stacks where the full stack is able to be sold, will be set to {@link null}<br><br>
+     *
+     * Developers should only use this method if they know exactly what it does!<br><br>
+     *
+     * This makes sure that the item limit/stock is always reached for 100% when selling items<br>
+     * @param player The player to check for permissions, multipliers, sell limits
+     * @param items The ItemStacks to be sold
+     * @param allowModify Whether this method is allowed to modify the provided array of items
+     * @return The prices of the items
+     */
+    public static SellPrices getCutSellPrices(OfflinePlayer player, ItemStack[] items, boolean allowModify) {
+        Objects.requireNonNull(player, "Player cannot be null");
+        Objects.requireNonNull(items, "Items cannot be null");
+
+        boolean online = player.isOnline();
+
+        Map<EcoType, Double> prices = new HashMap<>();
+        Map<ShopItem, Integer> shopItems = new HashMap<>();
+        for (int i = 0; i < items.length; i++) {
+            ItemStack item = items[i];
+            if (item == null || item.getType() == Material.AIR)
+                continue;
+
+            ShopItem shopItem = !online ? EconomyShopGUIHook.getShopItem(item) :
+                    EconomyShopGUIHook.getShopItem((Player) player, item);
+
+            if (shopItem == null || !EconomyShopGUIHook.isSellAble(shopItem))
+                continue;
+
+            int alreadySold = shopItems.getOrDefault(shopItem, 0);
+
+            int limit = EconomyShopGUIHook.getMaxSell(shopItem, item.getAmount(), alreadySold);
+            if (limit == -1) continue; // Maximum amount reached
+
+            limit = EconomyShopGUIHook.getSellLimit(shopItem, player.getUniqueId(), limit, alreadySold);
+            if (limit == -1) continue; // Sell limit reached
+
+            if (EconomyShopGUIHook.hasMultipleSellPrices(shopItem)) {
+                Map<EcoType, Double> sellPrices = !online ? EconomyShopGUIHook.getMultipleSellPrices(shopItem).getSellPrices(null, item, limit, alreadySold) :
+                        EconomyShopGUIHook.getMultipleSellPrices(shopItem).getSellPrices(null, (Player) player, item, limit, alreadySold);
+
+                for (EcoType ecoType : sellPrices.keySet()) {
+                    prices.put(ecoType, prices.getOrDefault(ecoType, 0d) + sellPrices.get(ecoType));
+                }
+            } else {
+                double sellPrice = !online ? EconomyShopGUIHook.getItemSellPrice(shopItem, item, limit, alreadySold) :
+                        EconomyShopGUIHook.getItemSellPrice(shopItem, item, (Player) player, limit, alreadySold);
+
+                prices.put(shopItem.getEcoType(), prices.getOrDefault(shopItem.getEcoType(), 0d) + sellPrice);
+            }
+
+            if (allowModify) {
+                if (limit < item.getAmount()) {
+                    item.setAmount(item.getAmount() - limit);
+                } else items[i] = null;
+            }
+
+            shopItems.put(shopItem, alreadySold + limit);
+        }
+
+        return new SellPrices(player, shopItems, prices);
     }
 
     /**
@@ -490,6 +703,42 @@ public class EconomyShopGUIHook {
      */
     public static boolean hasPermissions(ShopItem shopItem, Player player, String root) {
         return true;
+    }
+
+    /**
+     * Check for the maximum sell limit <b>per transaction</b>
+     *
+     * @return The amount of items which can be sold before reaching the limit
+     * @since EconomyShopGUI v5.2.0 || EconomyShopGUI-Premium v4.4.0
+     */
+    private static int getMaxSell(ShopItem shopItem, int qty, int alreadySold) {
+        if (shopItem.isMaxSell(alreadySold + qty)) {
+            if (alreadySold >= shopItem.getMaxSell())
+                return -1; // Item already reached max sell for this transaction
+            qty = shopItem.getMaxSell() - alreadySold;
+        }
+        return qty;
+    }
+
+    /**
+     * Check for item sell stock
+     * <p>
+     * This is a Premium only feature but calls to the API can still be made
+     * on the free version without it throwing an error
+     *
+     * @return The amount of items which can be sold before reaching the limit
+     * @since EconomyShopGUI-Premium v4.1.0
+     */
+    private static int getSellLimit(ShopItem shopItem, UUID playerUUID, int qty, int alreadySold) {
+        if (shopItem.getLimitedSellMode() != 0) { // Check for sell limits
+            int stock = EconomyShopGUIHook.getSellLimit(shopItem, playerUUID);
+            if (stock <= alreadySold) {
+                return -1; // Sell limit already reached
+            } else if (stock < (qty + alreadySold)) {
+                qty = stock - alreadySold; // The limit that is left after the AlreadySold
+            }
+        }
+        return qty;
     }
 
 }
