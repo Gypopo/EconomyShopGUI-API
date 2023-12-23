@@ -1,5 +1,6 @@
 package me.gypopo.economyshopgui.api;
 
+import me.gypopo.economyshopgui.api.objects.BuyPrice;
 import me.gypopo.economyshopgui.api.objects.SellPrice;
 import me.gypopo.economyshopgui.api.objects.SellPrices;
 import me.gypopo.economyshopgui.api.prices.AdvancedBuyPrice;
@@ -418,6 +419,60 @@ public class EconomyShopGUIHook {
      */
     public static double getItemBuyPrice(ShopItem shopItem, Player player, int amount) {
         return 0d;
+    }
+
+    /**
+     * Returns a map with buy prices for the given items<br><br>
+     * This method returns only prices of ShopItems that meet the following requirements:<br>
+     * - ShopItem is found inside shop ({@link EconomyShopGUIHook#getShopItem(Player, ItemStack) != null})<br>
+     * - ShopItem does not have an item error ({@link ShopItem#hasItemError()})<br>
+     * - ShopItem is not a display item ({@link ShopItem#isDisplayItem()})
+     * - ShopItem is buyable ({@link EconomyShopGUIHook#isBuyAble(ShopItem)} ()} ()})<br>
+     * - ShopItem is maximum buy limit ({@link ShopItem#isMaxBuy(int)} (int)})<br>
+     * - Player does have permissions for <b>EconomyShopGUI.shop.{section}</b><br>
+     * - Player does have permissions for this specific item ({@link EconomyShopGUIHook#hasPermissions(ShopItem, Player)})<br>
+     * - If there is enough stock available ({@link EconomyShopGUIHook#getItemStock(ShopItem, UUID)} (ShopItem, UUID)})<br>
+     *<br>
+     * @param player The player to check for permissions, discounts, multipliers, stock limits
+     * @param item The ItemStack to be bought
+     * @return The prices of the item, or an empty optional if the requirements are not met
+     */
+    public static Optional<BuyPrice> getBuyPrice(OfflinePlayer player, ItemStack item) {
+        Objects.requireNonNull(item, "Item cannot be null");
+        Objects.requireNonNull(player, "Player cannot be null");
+
+        boolean online = player.isOnline();
+        int amount = item.getAmount();
+
+        ShopItem shopItem = !online ? EconomyShopGUIHook.getShopItem(item) :
+                EconomyShopGUIHook.getShopItem((Player) player, item);
+
+        if (shopItem == null || !EconomyShopGUIHook.isBuyAble(shopItem))
+            return Optional.empty();
+
+        if (shopItem.isMaxBuy(item.getAmount()))
+            return Optional.empty();
+
+        if (shopItem.getLimitedStockMode() != 0) {
+            int stock = EconomyShopGUIHook.getItemStock(shopItem, player.getUniqueId());
+            if (amount > stock)
+                return Optional.empty();
+        }
+
+        BuyPrice price;
+        if (EconomyShopGUIHook.hasMultipleBuyPrices(shopItem)) {
+            Map<EcoType, Double> buyPrices = !online ? EconomyShopGUIHook.getMultipleBuyPrices(shopItem).getBuyPrices(null, amount) :
+                    EconomyShopGUIHook.getMultipleBuyPrices(shopItem).getBuyPrices(null, (Player) player, amount);
+
+            price = new BuyPrice(player, amount, shopItem, buyPrices);
+        } else {
+            double buyPrice = !online ? EconomyShopGUIHook.getItemBuyPrice(shopItem, amount) :
+                    EconomyShopGUIHook.getItemBuyPrice(shopItem, (Player) player, amount);
+
+            price = new BuyPrice(player, amount, shopItem, shopItem.getEcoType(), buyPrice);
+        }
+
+        return Optional.of(price);
     }
 
     /**
