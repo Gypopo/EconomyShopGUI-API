@@ -47,68 +47,9 @@ When integrated with the API, calling methods is as simple as:
 ```java
 EconomyShopGUIHook.someMethod();
 ```
-Example to get the prices of certain items:
-```java
-Double buyPrice = EconomyShopGUIHook.getItemBuyPrice(new ItemStack(Material.COBBLESTONE));
-if (buyPrice != null) p.sendMessage(ChatColor.GREEN + "The buy price of the item is: " + buyPrice);
+## Example usage inside a plugin:
+AutoSellChests is a good example which uses the API of EconomyShopGUI to sell contents of the chest and sell it to the shop via the API.
+See this class which gets the sell prices of the items within the chest: https://github.com/Gypopo/AutoSellChests/blob/main/src/main/java/me/gypopo/autosellchests/scheduler/SellScheduler.java#L126
 
-Double buyPriceDiscounted = EconomyShopGUIHook.getItemBuyPrice(p, new ItemStack(Material.BEETROOT));
-if (buyPriceDiscounted != null) p.sendMessage(ChatColor.GREEN + "The discounted buy price of the item is: " + buyPriceDiscounted);
-
-Double sellPrice = EconomyShopGUIHook.getItemSellPrice(new ItemStack(Material.BEDROCK));
-if (sellPrice != null) p.sendMessage(ChatColor.GREEN + "The sell price of the item is: " + sellPrice);
-
-Double sellPriceWithPermissionsCheck = EconomyShopGUIHook.getItemSellPrice(p, new ItemStack(Material.FLOWER_POT));
-if (sellPriceWithPermissionsCheck != null) p.sendMessage(ChatColor.GREEN + "The player has permissions to sell this item for: " + sellPriceWithPermissionsCheck);
-```
-## Methods:
-The below methods are available for developers to use within their plugin.
-Suggetions can be made to expand the API.
-```java
-/**
- * Gets a item sell price
- * If the item couldn't be found inside the shop, this will return null
- * Note: This method does NOT check for player permissions, instead you should use {@link #getItemSellPrice(Player, ItemStack)}
- *
- * @param item The item to get the sell price for
- * @return The sell price of the item, if not found this will return null
- */
-public static Double getItemSellPrice(ItemStack item) {
-    return null;
-}
-/**
- * Gets a item sell price
- * If the item couldn't be found inside the shop, this will return null
- * Note: This method DOES check if the player has the required permissions to sell items in the required shop category
- *
- * @param player Player to check for permissions
- * @param item The item to get the sell price for
- * @return The sell price of the item, if not found this will return null
- */
-public static Double getItemSellPrice(Player player, ItemStack item) {
-    return null;
-}
-/**
- * Gets a item buy price
- * If the item couldn't be found inside the shop, this will return null
- * Note: This method does NOT check for player permissions, instead you should use {@link #getItemBuyPrice(Player, ItemStack)}
- *
- * @param item The item to get the buy price for
- * @return The buy price of the item, if not found this will return null
- */
-public static Double getItemBuyPrice(ItemStack item) {
-    return null;
-}
-/**
- * Gets a item buy price with any discount included for the player if present
- * If the item couldn't be found inside the shop, this will return null
- * Note: This method DOES check if the player has the required permissions to buy items in the required shop category
- *
- * @param player Player to check for discounts and permissions
- * @param item The item to get the buy price for
- * @return The buy price of the item, if not found this will return null
- */
-public static Double getItemBuyPrice(Player player, ItemStack item) {
-    return null;
-}
-```
+## More info:
+For more info on how to use the API, refer to our wiki for detailed info: https://wiki.gpplugins.com/economyshopgui/api/api-usage
