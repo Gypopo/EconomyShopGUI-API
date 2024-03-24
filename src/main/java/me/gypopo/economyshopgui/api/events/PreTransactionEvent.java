@@ -14,6 +14,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This event is fired before a transaction occurs, allowing changes to price.
+ * <p>
+ * <b>NOTE</b> that this event can be a single or multiple item event depending on {@link #getTransactionType()}:<p>
+ * - In case of BUY_SCREEN || SELL_SCREEN || BUY_STACKS_SCREEN || SELL_ALL_SCREEN || QUICK_BUY || QUICK_SELL {@link #getPrices()} won't work, and it is required to use {@link #getPrice()} and {@link #setPrice(double)}
+ * <br>
+ * - In case of SELL_GUI_SCREEN || SELL_ALL_COMMAND || AUTO_SELL_CHEST {@link #getPrice()} and {@link #setPrice(double)} won't work, and it is required to use {@link #getPrices()}
+ */
 public class PreTransactionEvent extends CustomEvent implements Cancellable {
 
     private final int amount;
@@ -63,7 +71,7 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
 
     /**
      *
-     * @return The amount of items in this transaction
+     * @return The total amount of items in this transaction
      */
     public int getAmount() {
         return this.amount;
@@ -72,6 +80,7 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
     /**
      *
      * @return The price the player will pay/get for the item(s) after the transaction is made
+     * @apiNote This method only works with single item transactions
      */
     public double getPrice() {
         return this.price;
@@ -82,31 +91,44 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
      *
      * When multiple event listeners modify the {@link #setPrice(double)}, the final price for this event may be unexpected as other plugins also modify it.
      * In that case, developers should use this price as a reference
+     *
+     * @return The original price of the transaction
+     * @apiNote This method only works with single item transactions
      */
     public final double getOriginalPrice() {
         return this.originalPrice;
     }
 
     /**
-     * When the transaction mode is either
-     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return the prices of the items sold.
+     * Returns a map of prices when {@link #getTransactionType()} is either
+     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}.<br>
      * Else this will return an empty map.
      * <p>
      * The key is the {@link EcoType} where the value is the total cost price per economy type.
      * <p>
      * See {@link ShopItem#getEcoType()} to see which items use what {@link EcoType}.
      *
-     * @return All currency types together the costs which are used in this transaction
+     * @return A map of prices the player will pay after this transaction completes
+     * @apiNote This method only works with multiple item transactions
      */
     public Map<EcoType, Double> getPrices() {
         return this.prices;
     }
 
     /**
-     * Returns an unmodifiable map of the original prices
-     *
+     * Returns an unmodifiable map of the original prices when {@link #getTransactionType()} is either
+     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}.<br>
+     * Else this will return an empty map.
+     * <p>
+     * The key is the {@link EcoType} where the value is the total cost price per economy type.
+     * <p>
+     * See {@link ShopItem#getEcoType()} to see which items use what {@link EcoType}.
+     * <p>
      * When multiple event listeners modify the {@link #getPrices()} map, the final prices for this event may be unexpected as other plugins also modify it.
      * In that case, developers should use this map as a reference
+     *
+     * @return The original prices of the transaction
+     * @apiNote This method only works with multiple item transactions
      */
     public final Map<EcoType, Double> getOriginalPrices() {
         return this.originalPrices;
@@ -116,6 +138,7 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
      * Can be used to add/remove a multiplier to the price of the item
      *
      * @param price The new price the player is going to pay for the item
+     * @apiNote This method only works with single item transactions
      */
     public void setPrice(double price) {
         this.price = price;
@@ -131,23 +154,25 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
     }
 
     /**
-     * See {@link #getItems()} to get all items sold when the {@link #getTransactionType()} is either
+     * See {@link #getItems()} to get all items sold when {@link #getTransactionType()} is either
      * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}.
      *
      * @return The {@link ShopItem} that is used for this transaction
+     * @apiNote This method only works with single item transactions
      */
     public ShopItem getShopItem() {
         return this.shopItem;
     }
 
     /**
-     * When the transaction mode is either
-     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return the items sold.
+     * Returns the items sold when {@link #getTransactionType()} is either
+     * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}.<br>
      * Else this will return an empty map.
      * <p>
      * The key is the {@link ShopItem} where the value is the amount of items sold
      *
      * @return All items which are sold during this transaction
+     * @apiNote This method only works with multiple item transactions
      */
     public Map<ShopItem, Integer> getItems() { return this.items; }
 
@@ -160,10 +185,6 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
     }
 
     /**
-     * Returns the transaction type
-     * <p>
-     * Valid transaction types:
-     * {@code BUY_SCREEN}, {@code SELL_SCREEN}, {@code BUY_STACKS_SCREEN}, {@code SELL_ALL_SCREEN}
      *
      * @return The transaction type
      */
