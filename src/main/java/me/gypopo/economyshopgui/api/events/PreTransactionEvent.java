@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,9 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
     private final int amount;
     private boolean cancelled;
     private double price;
+    private final double originalPrice;
     private final Map<EcoType, Double> prices;
+    private final Map<EcoType, Double> originalPrices;
     private final ShopItem shopItem;
     private final Player player;
     private final Map<ShopItem, Integer> items;
@@ -29,9 +32,11 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
         this.shopItem = shopItem;
         this.player = player;
         this.price = price;
+        this.originalPrice = this.price;
         this.transactionType = transactionType;
         this.items = new HashMap<>();
         this.prices = new HashMap<>();
+        this.originalPrices = new HashMap<>();
     }
 
     public PreTransactionEvent(Map<ShopItem, Integer> items, Map<EcoType, Double> prices, Player player, int amount, Transaction.Type transactionType) {
@@ -39,7 +44,9 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
         this.shopItem = (ShopItem) items.keySet().toArray()[0];
         this.player = player;
         this.price = prices.get(this.shopItem.getEcoType());
+        this.originalPrice = this.price;
         this.prices = prices;
+        this.originalPrices = Collections.unmodifiableMap(this.prices);
         this.items = items;
         this.transactionType = transactionType;
     }
@@ -71,6 +78,16 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
     }
 
     /**
+     * Returns the original price
+     *
+     * When multiple event listeners modify the {@link #setPrice(double)}, the final price for this event may be unexpected as other plugins also modify it.
+     * In that case, developers should use this price as a reference
+     */
+    public final double getOriginalPrice() {
+        return this.originalPrice;
+    }
+
+    /**
      * When the transaction mode is either
      * {@link Transaction.Type#SELL_ALL_COMMAND} or {@link Transaction.Type#SELL_GUI_SCREEN}, this will return the prices of the items sold.
      * Else this will return an empty map.
@@ -83,6 +100,16 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
      */
     public Map<EcoType, Double> getPrices() {
         return this.prices;
+    }
+
+    /**
+     * Returns an unmodifiable map of the original prices
+     *
+     * When multiple event listeners modify the {@link #getPrices()} map, the final prices for this event may be unexpected as other plugins also modify it.
+     * In that case, developers should use this map as a reference
+     */
+    public final Map<EcoType, Double> getOriginalPrices() {
+        return this.originalPrices;
     }
 
     /**
