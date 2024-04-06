@@ -31,6 +31,8 @@ public class Transaction {
         BUY_STACKS_SCREEN(""),
         QUICK_SELL(""),
         QUICK_BUY(""),
+        SHOPSTAND_BUY_SCREEN(""),
+        SHOPSTAND_SELL_SCREEN(""),
         AUTO_SELL_CHEST("")
         ;
 
