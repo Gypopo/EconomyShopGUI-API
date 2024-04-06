@@ -42,9 +42,9 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
         this.price = price;
         this.originalPrice = this.price;
         this.transactionType = transactionType;
-        this.items = new HashMap<>();
-        this.prices = new HashMap<>();
-        this.originalPrices = new HashMap<>();
+        this.items = Collections.EMPTY_MAP;
+        this.prices = Collections.EMPTY_MAP;
+        this.originalPrices = this.prices;
     }
 
     public PreTransactionEvent(Map<ShopItem, Integer> items, Map<EcoType, Double> prices, Player player, int amount, Transaction.Type transactionType) {

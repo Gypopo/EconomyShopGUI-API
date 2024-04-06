@@ -11,6 +11,7 @@ public enum EconomyType {
     PLAYER_POINTS("PlayerPoints"),
     GEMS_ECONOMY("GemsEconomy"),
     ULTRA_ECONOMY("UltraEconomy"),
+    VOTING_PLUGIN("VotingPlugin"),
     ;
 
     private final String name;
