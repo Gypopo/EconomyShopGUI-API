@@ -155,12 +155,50 @@ public class ShopItem {
     }
 
     /**
-     * Returns whether the given amount is larger than the maximum amount to buy
+     * Returns whether the given amount is larger than the maximum amount to sell
      *
      * @param amount The amount to check for
-     * @return Whether the given amount is larger than the maximum amount to buy
+     * @return Whether the given amount is larger than the maximum amount to sell
      */
     public boolean isMaxSell(int amount) {
+        return false;
+    }
+
+    /**
+     * Returns the minimum amount of items which can be bought in one transaction
+     *
+     * @return The minimum amount of items which can be bought in one transaction, '0' if not set
+     */
+    public int getMinBuy() {
+        return 0;
+    }
+
+    /**
+     * Returns whether the given amount is smaller than the minimum amount to buy
+     *
+     * @param amount The amount to check for
+     * @return Whether the given amount is smaller than the minimum amount to buy
+     */
+    public boolean isMinBuy(int amount) {
+        return false;
+    }
+
+    /**
+     * Returns the minimum amount of items which can be sold in one transaction
+     *
+     * @return The minimum amount of items which can be sold in one transaction, '0' if not set
+     */
+    public int getMinSell() {
+        return 0;
+    }
+
+    /**
+     * Returns whether the given amount is smaller than the minimum amount to sell
+     *
+     * @param amount The amount to check for
+     * @return Whether the given amount is smaller than the minimum amount to sell
+     */
+    public boolean isMinSell(int amount) {
         return false;
     }
 

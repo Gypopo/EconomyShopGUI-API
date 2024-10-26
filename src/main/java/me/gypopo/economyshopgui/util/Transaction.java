@@ -66,6 +66,7 @@ public class Transaction {
         NO_ITEM_STOCK_LEFT,
         HIGHER_LEVEL_REQUIRED,
         REACHED_SELL_LIMIT,
+        NOT_ENOUGH_ITEMS,
         ;
     }
 }
