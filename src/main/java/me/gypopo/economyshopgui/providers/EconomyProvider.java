@@ -5,6 +5,8 @@ import org.bukkit.OfflinePlayer;
 
 public interface EconomyProvider {
 
+    boolean isDecimal();
+
     double getBalance(OfflinePlayer p);
 
     void depositBalance(OfflinePlayer p, double amount);
@@ -16,5 +18,9 @@ public interface EconomyProvider {
     String getPlural();
 
     String getSingular();
+
+    String getFriendly();
+
+    String formatPrice(double amount);
 
 }
