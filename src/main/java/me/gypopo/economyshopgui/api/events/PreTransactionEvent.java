@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This event is fired before a transaction occurs, allowing changes to price.
+ * This event is fired before a transaction occurs, allowing changes to price(s)
  * <p>
  * <b>NOTE</b> that this event can be a single or multiple item event depending on {@link #getTransactionType()}:<p>
  * - In case of BUY_SCREEN || SELL_SCREEN || BUY_STACKS_SCREEN || SELL_ALL_SCREEN || QUICK_BUY || QUICK_SELL {@link #getPrices()} won't work, and it is required to use {@link #getPrice()} and {@link #setPrice(double)}
@@ -136,6 +136,7 @@ public class PreTransactionEvent extends CustomEvent implements Cancellable {
 
     /**
      * Can be used to add/remove a multiplier to the price of the item
+     * <b>NOTE</b> developers should use {@link #getOriginalPrice()} instead of {@link #getPrice()} to modify this
      *
      * @param price The new price the player is going to pay for the item
      * @apiNote This method only works with single item transactions

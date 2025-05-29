@@ -71,15 +71,13 @@ public class ShopItem {
      */
     public boolean hasItemError() { return false; }
 
+    /**
+     *
+     * @param world The world name
+     * @return Whether a season modifier is active for this world
+     */
     public boolean hasSeasonModifier(String world) {
         return false;
-    }
-
-    /**
-     * @return Returns the level required in order to buy/sell this item
-     */
-    public int getLevelRequired() {
-        return 0;
     }
 
     /**
@@ -95,20 +93,22 @@ public class ShopItem {
 
     /**
      * 0 = no stock mode
-     * <p>
+     * <br>
      * 1 = global stock
-     * <p>
+     * <br>
      * 2 = player stock
+     *
      * @return The limited stock mode this item uses
      */
     public int getLimitedStockMode() { return 0; }
 
     /**
      * 0 = no stock mode
-     * <p>
+     * <br>
      * 1 = global stock
-     * <p>
+     * <br>
      * 2 = player stock
+     *
      * @return The limited sell mode this item uses
      */
     public int getLimitedSellMode() { return 0; }

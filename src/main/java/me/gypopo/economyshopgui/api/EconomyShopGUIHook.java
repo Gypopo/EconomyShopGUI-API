@@ -6,6 +6,7 @@ import me.gypopo.economyshopgui.api.objects.SellPrices;
 import me.gypopo.economyshopgui.api.prices.AdvancedBuyPrice;
 import me.gypopo.economyshopgui.api.prices.AdvancedSellPrice;
 import me.gypopo.economyshopgui.objects.ShopItem;
+import me.gypopo.economyshopgui.objects.shops.ShopSection;
 import me.gypopo.economyshopgui.providers.EconomyProvider;
 import me.gypopo.economyshopgui.util.EcoType;
 import me.gypopo.economyshopgui.util.Transaction;
@@ -619,11 +620,43 @@ public class EconomyShopGUIHook {
      * <p>
      * If no item is found at this item path, this will return null
      *
-     * @param itemPath The itemPath inside the shops.yml
+     * @param itemPath The itemPath inside the shops config
      * @return The ShopItem located at this config path
      */
     @Nullable
     public static ShopItem getShopItem(String itemPath) {
+        return null;
+    }
+
+    /**
+     * Returns the {@link ShopSection} for the given section name
+     * <p>
+     * If no section is found for this name, this will return null
+     *
+     * @param section The section name
+     * @return The ShopSection for this name
+     */
+    @Nullable
+    public static ShopSection getShopSection(String section) {
+        return null;
+    }
+
+    /**
+     * Returns a list of section names which are loaded
+     *
+     * @return All loaded shop categories by their names
+     * @see EconomyShopGUIHook#getShopSection(String)
+     */
+    public static List<String> getShopSections() {
+        return null;
+    }
+
+    /**
+     * Returns a map of all shop category's by name
+     *
+     * @return A map of all loaded sections by name
+     */
+    public static Map<String, ShopSection> getSections() {
         return null;
     }
 
