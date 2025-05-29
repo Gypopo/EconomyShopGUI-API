@@ -1,11 +1,14 @@
 # EconomyShopGUI-API
 The API of EconomyShopGUI can be used by developers to integrate with your plugin.
+
+Note that this is only a mock version of the actual API within EconomyShopGUI and acts only as a library for your IDE to use.
+This means you can safely ignore all warnings from your IDE of methods always returning null, simply because the actual API within EconomyShopGUI does not.
 ## Introduction:
 Latest version: [![](https://jitpack.io/v/Gypopo/EconomyShopGUI-API.svg)](https://jitpack.io/#Gypopo/EconomyShopGUI-API)
 
 If any issues are found, you may submit a issue on the issue tracker.
 
-The API has been added since version 3.9/1.12 of EconomyShopGUI, this means the server where the API is used needs to have the same or later version of EconomyShopGUI installed.
+The API has been added since version 3.9/1.12 of EconomyShopGUI/EconomyShopGUI-Premium, this means the server where the API is used needs to have the same or later version of EconomyShopGUI installed.
 
 As of now, the API is similar for the free and premium version, meaning that if the server running the API has EconomyShopGUI Premium installed that this will just work fine, the same for the free version.
 However, if you plan on using the API for servers with the free or premium version, you should add a softdepend to your plugin.yml for both versions.
@@ -27,6 +30,7 @@ And don't forget to make EconomyShopGUI load before your plugin inside the plugi
         <groupId>com.github.Gypopo</groupId>
         <artifactId>EconomyShopGUI-API</artifactId>
         <version>VERSION</version>
+        <scope>provided</scope>
     </dependency>
 </dependencies>
 ```
