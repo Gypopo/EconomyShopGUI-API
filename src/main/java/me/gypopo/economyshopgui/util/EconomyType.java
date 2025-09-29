@@ -12,6 +12,7 @@ public enum EconomyType {
     GEMS_ECONOMY("GemsEconomy"),
     ULTRA_ECONOMY("UltraEconomy"),
     VOTING_PLUGIN("VotingPlugin"),
+    EXTERNAL("ExternalProvider"),
     ;
 
     private final String name;
