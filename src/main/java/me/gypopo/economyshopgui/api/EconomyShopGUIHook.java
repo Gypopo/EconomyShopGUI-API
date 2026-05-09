@@ -579,11 +579,11 @@ public class EconomyShopGUIHook {
     /**
      * Load or retrieve the active price modifiers for a player
      * <p>
-     * This method will lookup the database if the player isn't loaded
+     * This method may lookup the database if the player isn't loaded, so this may be called async
      * @param playerUUID The player to receive the modifiers for
      * @return The player's price modifiers, or null if no this player doesn't have any active modifiers
      */
-    public static @Nullable PlayerPriceModifier loadPlayerPriceModifiersFromDatabase(UUID playerUUID) {
+    public static @Nullable PlayerPriceModifier loadPlayerPriceModifiers(UUID playerUUID) {
         return null;
     }
 
