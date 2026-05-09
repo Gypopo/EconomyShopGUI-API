@@ -1,10 +1,12 @@
 package me.gypopo.economyshopgui.api;
 
 import me.gypopo.economyshopgui.api.objects.BuyPrice;
+import me.gypopo.economyshopgui.api.objects.PlayerPriceModifier;
 import me.gypopo.economyshopgui.api.objects.SellPrice;
 import me.gypopo.economyshopgui.api.objects.SellPrices;
 import me.gypopo.economyshopgui.api.prices.AdvancedBuyPrice;
 import me.gypopo.economyshopgui.api.prices.AdvancedSellPrice;
+import me.gypopo.economyshopgui.objects.PriceModifierType;
 import me.gypopo.economyshopgui.objects.ShopItem;
 import me.gypopo.economyshopgui.objects.shops.ShopSection;
 import me.gypopo.economyshopgui.providers.EconomyProvider;
@@ -524,6 +526,66 @@ public class EconomyShopGUIHook {
         return new AdvancedSellPrice(shopItem);
     }
 
+    /**
+     * Sets a price modifier for this player on the specific items for the whole section
+     * <p>
+     * The percent is a value based on 100, e.g. 100 is the original price of a item and values can range from 0-200
+     * @param playerUUID The uuid of the player
+     * @param section The section containing the items to set the modifier for
+     * @param type The type of price modifier
+     * @param percent The percent of the new price
+     */
+    public static void setSectionPriceModifier(UUID playerUUID, String section, PriceModifierType type, double percent) {}
+
+    /**
+     * Sets a price modifier for this player on the specific shop item
+     * <p>
+     * The percent is a value based on 100, e.g. 100 is the original price of a item and values can range from 0-200
+     * @param playerUUID The uuid of the player
+     * @param itemPath The item path to set the modifier for
+     * @param type The type of price modifier
+     * @param percent The percent of the new price
+     */
+    public static void setItemPriceModifier(UUID playerUUID, String itemPath, PriceModifierType type, double percent) {}
+
+    /**
+     * Removes a section price modifier for the given player
+     *
+     * @param playerUUID The uuid of the player
+     * @param section The section having this price modifier
+     * @param type The price modifier type
+     */
+    public static void removeSectionModifier(UUID playerUUID, String section, PriceModifierType type) {}
+
+    /**
+     * Removes a price modifier for the given player from the shop item at the given path
+     *
+     * @param playerUUID The uuid of the player
+     * @param itemPath The itemPath of the item having this price modifier
+     * @param type The price modifier type
+     */
+    public static void removeItemModifier(UUID playerUUID, String itemPath, PriceModifierType type) {}
+
+    /**
+     * Get the active price modifiers for a loaded player
+     *
+     * @param playerUUID The player to receive the modifiers for
+     * @return The player's price modifiers, or null if player is not loaded/online or if the player does not have any active price modifiers
+     */
+    public static @Nullable PlayerPriceModifier getPlayerPriceModifiers(UUID playerUUID) {
+        return null;
+    }
+
+    /**
+     * Load or retrieve the active price modifiers for a player
+     * <p>
+     * This method will lookup the database if the player isn't loaded
+     * @param playerUUID The player to receive the modifiers for
+     * @return The player's price modifiers, or null if no this player doesn't have any active modifiers
+     */
+    public static @Nullable PlayerPriceModifier loadPlayerPriceModifiersFromDatabase(UUID playerUUID) {
+        return null;
+    }
 
     /**
      * Gets the registered EconomyProvider for the given type
