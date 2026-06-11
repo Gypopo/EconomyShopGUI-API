@@ -43,7 +43,7 @@ allprojects {
     }
 }
 dependencies {
-        implementation 'com.github.Gypopo:EconomyShopGUI-API:VERSION'
+        compileOnly 'com.github.Gypopo:EconomyShopGUI-API:VERSION'
 }
 ```
 ## Example usage:
