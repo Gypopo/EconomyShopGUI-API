@@ -1,9 +1,8 @@
 package me.gypopo.economyshopgui.api;
 
-import me.gypopo.economyshopgui.api.objects.BuyPrice;
-import me.gypopo.economyshopgui.api.objects.PlayerPriceModifier;
-import me.gypopo.economyshopgui.api.objects.SellPrice;
-import me.gypopo.economyshopgui.api.objects.SellPrices;
+import me.gypopo.economyshopgui.api.events.PostTransactionEvent;
+import me.gypopo.economyshopgui.api.events.PreTransactionEvent;
+import me.gypopo.economyshopgui.api.objects.*;
 import me.gypopo.economyshopgui.api.prices.AdvancedBuyPrice;
 import me.gypopo.economyshopgui.api.prices.AdvancedSellPrice;
 import me.gypopo.economyshopgui.objects.PriceModifierType;
@@ -11,7 +10,9 @@ import me.gypopo.economyshopgui.objects.ShopItem;
 import me.gypopo.economyshopgui.objects.shops.ShopSection;
 import me.gypopo.economyshopgui.providers.EconomyProvider;
 import me.gypopo.economyshopgui.util.EcoType;
+import me.gypopo.economyshopgui.util.EconomyType;
 import me.gypopo.economyshopgui.util.Transaction;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -360,6 +361,62 @@ public class EconomyShopGUIHook {
     }
 
     /**
+     * Sells a shop item for the player and takes it from their inventory, also correctly updates all items limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being purchased may be different from the {@link amount} argument
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to sell this item from
+     * @param shopItem Shop item to sell
+     * @param amount Amount of items to sell
+     * @return Result of this transaction
+     */
+    public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount) {
+        return sellItem(player, shopItem, amount, false, false, true, false);
+    }
+
+    /**
+     * Sells a shop item for the player and takes it from their inventory, also correctly updates all items limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being sold may be different from the {@link amount} argument if {@link allowQuantityChange} is true
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to sell this item from
+     * @param shopItem Shop item to sell
+     * @param amount Amount of items to sell
+     * @param checkPermissions Whether to check if the player has permissions to sell this item
+     * @param checkRequirements Whether to check if the player meets all the requirements of this shop item
+     * @return Result of this transaction
+     */
+    public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements) {
+        return sellItem(player, shopItem, amount, checkPermissions, checkRequirements, true, false);
+    }
+
+    /**
+     * Sells a shop item for the player and takes it from their inventory, also correctly updates all items limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being sold may be different from the {@link amount} argument if {@link allowQuantityChange} is true
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to sell this item from
+     * @param shopItem Shop item to sell
+     * @param amount Amount of items to sell
+     * @param checkPermissions Whether to check if the player has permissions to sell this item
+     * @param checkRequirements Whether to check if the player meets all the requirements of this shop item
+     * @param allowQuantityChange Whether this method should try and complete the transaction by adapting the amount given based on the available inventory items of the player, max sell limits and item sell limits which may change the outcome of the transaction
+     *                            <br>
+     *                            If false, the transaction will fail if the player does not have enough items, max sell or item sell limits are reached
+     * @param playerTriggered Whether EconomyShopGUI should also send player messages like no items to be sold, insufficient funds, not enough item stock or the transaction complete message and sound effects directly to the player as if the player triggered the transaction
+     * @return Result of this transaction
+     */
+    public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements, boolean allowQuantityChange, boolean playerTriggered) {
+        return new TransactionResult(Transaction.Result.SUCCESS);
+    }
+
+    /**
      * This will return whether the item can be bought
      * <p>
      * Checks if the item has a buy price at all and if it isn't negative
@@ -524,6 +581,62 @@ public class EconomyShopGUIHook {
      */
     public static AdvancedSellPrice getMultipleSellPrices(ShopItem shopItem) {
         return new AdvancedSellPrice(shopItem);
+    }
+
+    /**
+     * Purchases a shop item for the player and adds the item to the inventory, also correctly updates all item stock/limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being purchased may be different from the {@link amount} argument
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to purchase this item for
+     * @param shopItem Shop item to purchase
+     * @param amount Amount of items to purchase
+     * @return Result of this transaction
+     */
+    public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount) {
+        return purchaseItem(player, shopItem, amount, false, false, true, false);
+    }
+
+    /**
+     * Purchases a shop item for the player and adds the item to the inventory, also correctly updates all item stock/limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being purchased may be different from the {@link amount} argument
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to purchase this item for
+     * @param shopItem Shop item to purchase
+     * @param amount Amount of items to purchase
+     * @param checkPermissions Whether to check for if the player has permissions to buy this item
+     * @param checkRequirements Whether to check for if the player meets all the requirements of this shop item
+     * @return Result of this transaction
+     */
+    public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements) {
+        return purchaseItem(player, shopItem, amount, checkPermissions, checkRequirements, true, false);
+    }
+
+    /**
+     * Purchases a shop item for the player and adds the item to the inventory, also correctly updates all item stock/limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being purchased may be different from the {@link amount} argument if {@link allowQuantityChange} is true
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to purchase this item for
+     * @param shopItem Shop item to purchase
+     * @param amount Amount of items to purchase
+     * @param checkPermissions Whether to check if the player has permissions to buy this item
+     * @param checkRequirements Whether to check if the player meets all the requirements of this shop item
+     * @param allowQuantityChange Whether this method should try and complete the transaction by adapting the amount given based on the player's free space inside the inventory, max buy limits and item stock which may change the outcome of the transaction
+     *                            <br>
+     *                            If false, the transaction will fail if inventory size, max buy limits or item stock are to small
+     * @param playerTriggered Whether EconomyShopGUI should also send player messages like no inventory space, insufficient funds, not enough item stock or the transaction complete message and sound effects directly to the player as if the player triggered the transaction
+     * @return Result of this transaction
+     */
+    public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements, boolean allowQuantityChange, boolean playerTriggered) {
+        return new TransactionResult(Transaction.Result.SUCCESS);
     }
 
     /**
@@ -891,4 +1004,36 @@ public class EconomyShopGUIHook {
         return qty;
     }
 
+
+    private static boolean canSell(ShopItem shopItem, Player p) {
+        return true;
+    }
+
+    private static ArrayList<ItemStack> getSellAble(ShopItem shopItem, Player p, int amount, boolean allowQuantityChange) {
+        return new ArrayList<>();
+    }
+
+    private static boolean canPay(Player player, EcoType type, double amount) {
+        return true;
+    }
+
+    private static boolean canBuy(Player p, ShopItem shopItem) {
+        return p.getInventory().firstEmpty() != -1 || Arrays.stream(p.getInventory().getContents()).anyMatch(stack -> stack != null && stack.isSimilar(shopItem.getItemToGive()) && stack.getAmount() < stack.getMaxStackSize());
+    }
+
+    private static int getFinalAmount(ShopItem shopItem, Player p, int amount, boolean allowQuantityChange) {
+        return 1;
+    }
+
+    private static void callPostB(ShopItem shopItem, Player p, int amount, Map<EcoType, Double> prices, Transaction.Result result) {
+        callPost(shopItem, p, amount, prices, Transaction.Type.API_BUY, result);
+    }
+
+    private static void callPostS(ShopItem shopItem, Player p, int amount, Map<EcoType, Double> prices, Transaction.Result result) {
+        callPost(shopItem, p, amount, prices, Transaction.Type.API_SELL, result);
+    }
+
+    private static void callPost(ShopItem shopItem, Player p, int amount, Map<EcoType, Double> prices, Transaction.Type type, Transaction.Result result) {
+        Bukkit.getPluginManager().callEvent(new PostTransactionEvent(Collections.singletonMap(shopItem, amount), prices, p, amount, type, result));
+    }
 }

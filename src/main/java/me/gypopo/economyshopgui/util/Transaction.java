@@ -18,7 +18,7 @@ public class Transaction {
         }
 
         public static Mode getFromType(Type type) {
-            return type == Type.BUY_SCREEN || type == Type.BUY_STACKS_SCREEN || type == Type.QUICK_BUY ? BUY : SELL;
+            return type == Type.BUY_SCREEN || type == Type.BUY_STACKS_SCREEN || type == Type.QUICK_BUY || type == Type.SHOPSTAND_BUY_SCREEN || type == Type.API_BUY ? BUY : SELL;
         }
     }
 
@@ -33,7 +33,9 @@ public class Transaction {
         QUICK_BUY(""),
         SHOPSTAND_BUY_SCREEN(""),
         SHOPSTAND_SELL_SCREEN(""),
-        AUTO_SELL_CHEST("")
+        AUTO_SELL_CHEST(""),
+        API_BUY("api"),
+        API_SELL("api"),
         ;
 
         private String name;
@@ -53,20 +55,26 @@ public class Transaction {
         // Success
         SUCCESS,
         SUCCESS_COMMANDS_EXECUTED,
-        NOT_ALL_ITEMS_ADDED,
 
-        // Failed
-        CANT_STORE_PAYMENT,
-        NOT_ENOUGH_SPACE,
-        INSUFFICIENT_FUNDS,
-        NO_INVENTORY_SPACE,
-        NEGATIVE_ITEM_PRICE,
-        TRANSACTION_CANCELLED,
-        NO_ITEMS_FOUND,
-        NO_ITEM_STOCK_LEFT,
-        HIGHER_LEVEL_REQUIRED,
-        REACHED_SELL_LIMIT,
-        NOT_ENOUGH_ITEMS,
+        // Pre checks (API usage)
+        ITEM_ERROR, // ShopItem has a item error
+        DISPLAY_ITEM, // ShopItem is a display item
+        NEGATIVE_ITEM_PRICE, // ShopItem has none or a negative price
+        NO_PERMISSIONS, // Player has no shop or item permissions
+        REQUIREMENTS_FAILED, // Player does not meet requirements of shop item
+
+        // Transaction cancel reasons
+        INSUFFICIENT_FUNDS, // Not enough money
+        NO_INVENTORY_SPACE, // Not enough space in inv
+        TRANSACTION_CANCELLED, // Transaction cancelled by PreTransactionEvent
+        NO_ITEMS_FOUND, // In sell transaction, if player doesn't have the items in the inventory to sell
+        NOT_ENOUGH_ITEMS, // Amount of items being bought/sold is smaller then the min-sell/min-buy setting
+        TO_MANY_ITEMS, // Amount of items being bought/sold is larger as the max-sell/max-buy setting
+
+        // Premium transaction cancel reasons
+        NO_ITEM_STOCK_LEFT, // Not enough item stock left
+        REACHED_SELL_LIMIT, // Can't sell the amount of items cause of item sell limit
+        CANT_STORE_PAYMENT, // If the item has a ITEM sell price and cannot fit inside the player's inventory
         ;
     }
 }
