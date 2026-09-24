@@ -27,7 +27,7 @@ public class AdvancedBuyPrice {
 
     /**
      * This will return all possible currency types this item has.
-     * An empty list is returned if the item cannot be purchased or has no sell prices set
+     * An empty list is returned if the item cannot be purchased or has no buy prices set
      *
      * @return A list of all possible buy prices for this item
      */
