@@ -17,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -372,8 +373,26 @@ public class EconomyShopGUIHook {
      * @param amount Amount of items to sell
      * @return Result of this transaction
      */
+    @Deprecated
     public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount) {
         return sellItem(player, shopItem, amount, false, false, true, false);
+    }
+
+    /**
+     * Sells a shop item for the player and takes it from their inventory, also correctly updates all items limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being purchased may be different from the {@link amount} argument
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to sell this item from
+     * @param shopItem Shop item to sell
+     * @param amount Amount of items to sell
+     * @param transactionType The type of transaction, for example "SELL_WAND" or "SELL_CHEST". Can also be the plugin name triggering this transaction (Used for logging purposes only)
+     * @return Result of this transaction
+     */
+    public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount, @NotNull String transactionType) {
+        return sellItem(player, shopItem, amount, false, false, true, false, transactionType);
     }
 
     /**
@@ -390,8 +409,28 @@ public class EconomyShopGUIHook {
      * @param checkRequirements Whether to check if the player meets all the requirements of this shop item
      * @return Result of this transaction
      */
+    @Deprecated
     public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements) {
         return sellItem(player, shopItem, amount, checkPermissions, checkRequirements, true, false);
+    }
+
+    /**
+     * Sells a shop item for the player and takes it from their inventory, also correctly updates all items limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being sold may be different from the {@link amount} argument if {@link allowQuantityChange} is true
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to sell this item from
+     * @param shopItem Shop item to sell
+     * @param amount Amount of items to sell
+     * @param checkPermissions Whether to check if the player has permissions to sell this item
+     * @param checkRequirements Whether to check if the player meets all the requirements of this shop item
+     * @param transactionType The type of transaction, for example "SELL_WAND" or "SELL_CHEST". Can also be the plugin name triggering this transaction (Used for logging purposes only)
+     * @return Result of this transaction
+     */
+    public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements, @NotNull String transactionType) {
+        return sellItem(player, shopItem, amount, checkPermissions, checkRequirements, true, false, transactionType);
     }
 
     /**
@@ -412,7 +451,31 @@ public class EconomyShopGUIHook {
      * @param playerTriggered Whether EconomyShopGUI should also send player messages like no items to be sold, insufficient funds, not enough item stock or the transaction complete message and sound effects directly to the player as if the player triggered the transaction
      * @return Result of this transaction
      */
+    @Deprecated
     public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements, boolean allowQuantityChange, boolean playerTriggered) {
+        return sellItem(player, shopItem, amount, checkPermissions, checkRequirements, allowQuantityChange, playerTriggered, "Unknown");
+    }
+
+    /**
+     * Sells a shop item for the player and takes it from their inventory, also correctly updates all items limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being sold may be different from the {@link amount} argument if {@link allowQuantityChange} is true
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to sell this item from
+     * @param shopItem Shop item to sell
+     * @param amount Amount of items to sell
+     * @param checkPermissions Whether to check if the player has permissions to sell this item
+     * @param checkRequirements Whether to check if the player meets all the requirements of this shop item
+     * @param allowQuantityChange Whether this method should try and complete the transaction by adapting the amount given based on the available inventory items of the player, max sell limits and item sell limits which may change the outcome of the transaction
+     *                            <br>
+     *                            If false, the transaction will fail if the player does not have enough items, max sell or item sell limits are reached
+     * @param playerTriggered Whether EconomyShopGUI should also send player messages like no items to be sold, insufficient funds, not enough item stock or the transaction complete message and sound effects directly to the player as if the player triggered the transaction
+     * @param transactionType The type of transaction, for example "SELL_WAND" or "SELL_CHEST". Can also be the plugin name triggering this transaction (Used for logging purposes only)
+     * @return Result of this transaction
+     */
+    public static TransactionResult sellItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements, boolean allowQuantityChange, boolean playerTriggered, @NotNull String transactionType) {
         return new TransactionResult(Transaction.Result.SUCCESS);
     }
 
@@ -595,9 +658,28 @@ public class EconomyShopGUIHook {
      * @param amount Amount of items to purchase
      * @return Result of this transaction
      */
+    @Deprecated
     public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount) {
         return purchaseItem(player, shopItem, amount, false, false, true, false);
     }
+
+    /**
+     * Purchases a shop item for the player and adds the item to the inventory, also correctly updates all item stock/limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being purchased may be different from the {@link amount} argument
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to purchase this item for
+     * @param shopItem Shop item to purchase
+     * @param amount Amount of items to purchase
+     * @param transactionType The type of transaction, for example "NPC_SHOP" or "CRATE". Can also be the plugin name triggering this transaction (Used for logging purposes only)
+     * @return Result of this transaction
+     */
+    public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount, @NotNull String transactionType) {
+        return purchaseItem(player, shopItem, amount, false, false, true, false, transactionType);
+    }
+
 
     /**
      * Purchases a shop item for the player and adds the item to the inventory, also correctly updates all item stock/limits and the player's balance
@@ -613,8 +695,28 @@ public class EconomyShopGUIHook {
      * @param checkRequirements Whether to check for if the player meets all the requirements of this shop item
      * @return Result of this transaction
      */
+    @Deprecated
     public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements) {
         return purchaseItem(player, shopItem, amount, checkPermissions, checkRequirements, true, false);
+    }
+
+    /**
+     * Purchases a shop item for the player and adds the item to the inventory, also correctly updates all item stock/limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being purchased may be different from the {@link amount} argument
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to purchase this item for
+     * @param shopItem Shop item to purchase
+     * @param amount Amount of items to purchase
+     * @param checkPermissions Whether to check for if the player has permissions to buy this item
+     * @param checkRequirements Whether to check for if the player meets all the requirements of this shop item
+     * @param transactionType The type of transaction, for example "NPC_SHOP" or "CRATE". Can also be the plugin name triggering this transaction (Used for logging purposes only)
+     * @return Result of this transaction
+     */
+    public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements, @NotNull String transactionType) {
+        return purchaseItem(player, shopItem, amount, checkPermissions, checkRequirements, true, false, transactionType);
     }
 
     /**
@@ -635,7 +737,31 @@ public class EconomyShopGUIHook {
      * @param playerTriggered Whether EconomyShopGUI should also send player messages like no inventory space, insufficient funds, not enough item stock or the transaction complete message and sound effects directly to the player as if the player triggered the transaction
      * @return Result of this transaction
      */
+    @Deprecated
     public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements, boolean allowQuantityChange, boolean playerTriggered) {
+        return purchaseItem(player, shopItem, amount, checkPermissions, checkRequirements, allowQuantityChange, playerTriggered, "Unknown");
+    }
+
+    /**
+     * Purchases a shop item for the player and adds the item to the inventory, also correctly updates all item stock/limits and the player's balance
+     * <br><br>
+     * <b>NOTE</b> that the prices/amount of items being purchased may be different from the {@link amount} argument if {@link allowQuantityChange} is true
+     * <br>
+     * Developers should check the TransactionResult for the actual prices/amount being withdrawn/deposited from/to the player!
+     *
+     * @param player Player to purchase this item for
+     * @param shopItem Shop item to purchase
+     * @param amount Amount of items to purchase
+     * @param checkPermissions Whether to check if the player has permissions to buy this item
+     * @param checkRequirements Whether to check if the player meets all the requirements of this shop item
+     * @param allowQuantityChange Whether this method should try and complete the transaction by adapting the amount given based on the player's free space inside the inventory, max buy limits and item stock which may change the outcome of the transaction
+     *                            <br>
+     *                            If false, the transaction will fail if inventory size, max buy limits or item stock are to small
+     * @param playerTriggered Whether EconomyShopGUI should also send player messages like no inventory space, insufficient funds, not enough item stock or the transaction complete message and sound effects directly to the player as if the player triggered the transaction
+     * @param transactionType The type of transaction, for example "NPC_SHOP" or "CRATE". Can also be the plugin name triggering this transaction (Used for logging purposes only)
+     * @return Result of this transaction
+     */
+    public static TransactionResult purchaseItem(Player player, ShopItem shopItem, int amount, boolean checkPermissions, boolean checkRequirements, boolean allowQuantityChange, boolean playerTriggered, @NotNull String transactionType) {
         return new TransactionResult(Transaction.Result.SUCCESS);
     }
 
@@ -715,6 +841,30 @@ public class EconomyShopGUIHook {
     }
 
     /**
+     * Logs a transaction made by the API directly to the transaction log
+     *
+     * @param uuid The playerUUID that made the transaction
+     * @param item The shop item being bought/sold
+     * @param prices The prices of the shop item
+     * @param amount The amount of this shop item being bought/sold
+     * @param action Whether the transaction is for buying/selling
+     * @param transactionType The type of transaction, for example "SELL_CHEST" or "SELL_WAND". Can also be the plugin name triggering this transaction (Used for logging purposes only)
+     */
+    public static void logTransaction(UUID uuid, ShopItem item, Map<EcoType, Double> prices, int amount, Transaction.Mode action, @NotNull String transactionType) {}
+
+    /**
+     * Logs a transaction made by the API directly to the transaction log
+     *
+     * @param uuid The playerUUID that made the transaction
+     * @param items The shop items being bought/sold
+     * @param prices The prices of the shop items
+     * @param amount The total amount of shop items sold from the items map
+     * @param action Whether the transaction is for buying/selling
+     * @param transactionType The type of transaction, for example "NPC_SHOP" or "CRATE". Can also be the plugin name triggering this transaction (Used for logging purposes only)
+     */
+    public static void logTransaction(UUID uuid, Map<ShopItem, Integer> items, Map<EcoType, Double> prices, int amount, Transaction.Mode action, @NotNull String transactionType) {}
+
+    /**
      * When DynamicPricing is enabled,
      * this method will 'purchase' the items given from the market and change the DynamicPrice for the item accordingly
      *
@@ -753,6 +903,42 @@ public class EconomyShopGUIHook {
      * @param amount The amount of items that are sold
      */
     public static void sellItem(ShopItem shopItem, int amount) {}
+
+    /**
+     * Opens the buy/sell transaction screen for the {@link ShopItem} located at the given section and item index to the player
+     * <p>
+     * If no item is found for the given section/itemIndex, this will throw a NullPointerException
+     *
+     * @param p The player to open the transaction screen for
+     * @param section The section the shop item is located in
+     * @param itemIndex The item index/location of the shop item inside the section
+     * @param mode Whether to open the buy or the sell screen
+     *
+     * @throws NullPointerException If the section of item path is invalid
+     * @see #openTransactionScreen(Player, ShopItem, Transaction.Mode)
+     */
+    public static void openTransactionScreen(Player p, String section, String itemIndex, Transaction.Mode mode) {
+        ShopSection shopSection = EconomyShopGUIHook.getShopSection(section);
+        if (shopSection == null)
+            throw new NullPointerException("A section with name '" + section + "' does not exist");
+
+        ShopItem shopItem = shopSection.getShopItem(section + "." + itemIndex);
+        if (shopItem == null)
+            throw new NullPointerException("The shop item at section " + section + " with index " + itemIndex + " does not exist");
+
+        openTransactionScreen(p, shopItem, mode);
+    }
+
+    /**
+     * Opens the buy/sell transaction screen for the given {@link ShopItem} to the player
+     * <p>
+     * It's recommended to check {@link ShopItem#isBuyAble()}/{@link ShopItem#isSellAble()}
+     *
+     * @param p The player to open the transaction screen for
+     * @param shopItem The shop item to open the transaction screen for
+     * @param mode Whether to open the buy or the sell screen
+     */
+    public static void openTransactionScreen(Player p, ShopItem shopItem, Transaction.Mode mode) {}
 
     /**
      * Returns the {@link ShopItem} matching the given {@link ItemStack}
